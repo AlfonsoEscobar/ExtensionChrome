@@ -78,7 +78,7 @@ function terminando(){
 
 	chrome.downloads.download({
 		url: save(),
-		filename: "Test",
+		filename: "Test.txt",
 		saveAs: true
 	});
 
