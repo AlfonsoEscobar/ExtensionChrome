@@ -1,5 +1,5 @@
 //Icono de activado
-var iconAct = "img/activate.png";
+var iconAct = "img/activatev.png";
 
 //Icono desactivado
 var iconDes = "img/desactivate.png";
