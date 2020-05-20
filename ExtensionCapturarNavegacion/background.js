@@ -1,8 +1,8 @@
 //Icono de activado
 var iconAct = "img/activate.png";
 
-//Icono de desactivado
-var iconDes = "img/deactivate.png";
+//Icono desactivado
+var iconDes = "img/desactivate.png";
 
 //Array donde se guardaran los eventos que vayan grabando
 var secuencia = [];
