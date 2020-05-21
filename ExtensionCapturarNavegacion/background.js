@@ -134,7 +134,7 @@ function diferenciarEventos(secuencia) {
             } else if (secuencia[i].linkText != "") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText (" + secuencia[i].linkText + "))" + "\n"];
             } else if (secuencia[i].path != "") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.path (" + secuencia[i].path + "))" + "\n"];
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath (" + secuencia[i].path + "))" + "\n"];
             } else {
                 javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
             }
@@ -144,7 +144,7 @@ function diferenciarEventos(secuencia) {
             } else if (secuencia[i].name != "") {
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name (" + secuencia[i].name + ", " + secuencia[i].value + "))" + "\n"];
             } else if (secuencia[i].path != "") {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.path (" + secuencia[i].path + ", " + secuencia[i].value + "))" + "\n"];
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.xpath (" + secuencia[i].path + ", " + secuencia[i].value + "))" + "\n"];
             } else {
                 javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
             }
@@ -152,6 +152,7 @@ function diferenciarEventos(secuencia) {
     }
     return javaFunciones;
 }
+
 // Evento click
 // -        Si el elemento está identificado por ID: waitElementAndClick (By.id (IDENTIFICADOR));
 // -        Si el elemento está identificado por NAME: waitElementAndClick (By.name (NOMBRE));

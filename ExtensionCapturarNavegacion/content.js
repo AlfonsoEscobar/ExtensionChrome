@@ -14,21 +14,17 @@ document.addEventListener("click", clickHandler);
 function clickHandler(event) {
     //Inicializa la variable "mandar" a falso para que solo cuando es un click valido se mande la informacion
     // al background
-    
     let mandar = false;
     let tipo = event.srcElement.localName;
     var path = "";
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
     if (tipo == 'a' || tipo == 'button' || tipo == 'input' || tipo == 'select') {
-        // con esto recogemos todo el path del evento y lo guardamos en un string
-        for (var i = 0; i < event.path.length; i++) {
+        // con esto recogemos todo el path del evento y lo guardamos en un string(lo ponemos a lenght -1 para que tome desde el document)
+        for (var i = 0; i < event.path.length - 1; i++) {
             path = path + "/" + event.path[i].nodeName;
         }
-        // con esto creamos el array del path
-        var arrayPath = path.split("/");
-        
         // Volcamos todos los datos a nuestro objeto para enviarlo
-        var miobjeto = new DatosEvento(event.srcElement.id, event.srcElement.name, event.srcElement.localName, event.type, null, event.srcElement.textContent, arrayPath);
+        var miobjeto = new DatosEvento(event.srcElement.id, event.srcElement.name, event.srcElement.localName, event.type, null, event.srcElement.textContent, path);
         mandar = true;
     }
     //Solo si la varible "mandar" es igual a true, es decir a dado en un elemento valido
@@ -43,10 +39,9 @@ document.addEventListener("change", updateValue);
 
 function updateValue(e) {
     var path = "";
-    for (var i = 0; i < e.path.length; i++) {
+    for (var i = 0; i < e.path.length - 1; i++) {
         path = path + "/" + e.path[i].nodeName;
     }
-     var arrayPath = path.split("/");
-    var datos = new DatosEvento(e.srcElement.id, event.srcElement.name, e.srcElement.localName, e.type, e.srcElement.value, event.srcElement.textContent,path);
+    var datos = new DatosEvento(e.srcElement.id, event.srcElement.name, e.srcElement.localName, e.type, e.srcElement.value, event.srcElement.textContent, path);
     chrome.runtime.sendMessage(datos);
 }
