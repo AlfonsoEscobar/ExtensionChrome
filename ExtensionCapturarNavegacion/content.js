@@ -1,11 +1,12 @@
 // Constructor del objeto que luego queremos enviar al background
-function DatosEvento(id, name, elementType, typeEvent, value, linkText) {
+function DatosEvento(id, name, elementType, typeEvent, value, linkText, path) {
     this.id = id;
     this.name = name;
     this.elementType = elementType;
     this.typeEvent = typeEvent;
     this.value = value;
     this.linkText = linkText;
+    this.path = path;
 }
 //Esta a la escucha del evento click en todo el DOM y llama a la funcion "clickHandler"
 document.addEventListener("click", clickHandler);
@@ -16,10 +17,18 @@ function clickHandler(event) {
     
     let mandar = false;
     let tipo = event.srcElement.localName;
-    console.log(tipo);
+    var path = "";
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
     if (tipo == 'a' || tipo == 'button' || tipo == 'input' || tipo == 'select') {
-        var miobjeto = new DatosEvento(event.srcElement.id, event.srcElement.name, event.srcElement.localName, event.type, null, event.srcElement.textContent);
+        // con esto recogemos todo el path del evento y lo guardamos en un string
+        for (var i = 0; i < event.path.length; i++) {
+            path = path + "/" + event.path[i].nodeName;
+        }
+        // con esto creamos el array del path
+        var arrayPath = path.split("/");
+        
+        // Volcamos todos los datos a nuestro objeto para enviarlo
+        var miobjeto = new DatosEvento(event.srcElement.id, event.srcElement.name, event.srcElement.localName, event.type, null, event.srcElement.textContent, arrayPath);
         mandar = true;
     }
     //Solo si la varible "mandar" es igual a true, es decir a dado en un elemento valido
@@ -33,6 +42,11 @@ function clickHandler(event) {
 document.addEventListener("change", updateValue);
 
 function updateValue(e) {
-    var datos = new DatosEvento(e.srcElement.id, event.srcElement.name, e.srcElement.localName, e.type, e.srcElement.value, event.srcElement.textContent);
+    var path = "";
+    for (var i = 0; i < e.path.length; i++) {
+        path = path + "/" + e.path[i].nodeName;
+    }
+     var arrayPath = path.split("/");
+    var datos = new DatosEvento(e.srcElement.id, event.srcElement.name, e.srcElement.localName, e.type, e.srcElement.value, event.srcElement.textContent,path);
     chrome.runtime.sendMessage(datos);
 }
