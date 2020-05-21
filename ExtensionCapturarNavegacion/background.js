@@ -62,7 +62,8 @@ const oyente = function listener(request, sender, sendResponse) {
         name: request.name,
         elementType: request.elementType,
         typeEvent: request.typeEvent,
-        value: request.value
+        value: request.value,
+        linkText: request.linkText
     }
     console.log(mensaje);
     //Guardamos los objetos segun van llegando
@@ -125,17 +126,19 @@ function diferenciarEventos(secuencia) {
     var javaFunciones = "";
     for (i in secuencia) {
         if (secuencia[i].typeEvent === "click") {
-            if (secuencia[i].id != "null") {
+            if (secuencia[i].id != "") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.id (" + secuencia[i].id + "))" + "\n"];
-            } else if (secuencia[i].name != null && secuencia[i].id == null) {
+            } else if (secuencia[i].name != "") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.name (" + secuencia[i].name + "))" + "\n"];
+            } else if (secuencia[i].linkText != "") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText (" + secuencia[i].linkText + "))" + "\n"];
             } else {
                 javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
             }
         } else if (secuencia[i].typeEvent === "change") {
-            if (secuencia[i].id != "null") {
+            if (secuencia[i].id != "") {
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id (" + secuencia[i].id + ", " + secuencia[i].value + "))" + "\n"];
-            } else if (secuencia[i].name != null && secuencia[i].id == null) {
+            } else if (secuencia[i].name != "") {
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name (" + secuencia[i].name + ", " + secuencia[i].value + "))" + "\n"];
             } else {
                 javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
@@ -144,12 +147,3 @@ function diferenciarEventos(secuencia) {
     }
     return javaFunciones;
 }
-// Evento click
-// -        Si el elemento está identificado por ID: waitElementAndClick (By.id (IDENTIFICADOR));
-// -        Si el elemento está identificado por NAME: waitElementAndClick (By.name (NOMBRE));
-// -FALTA ESTO        Si el elemento está identificado por el LINK: waitElementAndClick (By.linkText (NOMBRE));
-// -        En otro caso habrá que utilizar el Path, por ahora que se muestre un mensaje indicando que no se ha podido identificar el elemento
-// Evento change
-// -        Si el elemento está identificado por ID: waitElementAndSendKeys (By.id (ID), VALOR);
-// -        Si el elemento está identificado por NAME: waitElementAndSendKeys (By.name (NOMBRE), VALOR);
-// -		En otro caso habrá que utilizar el Path, por ahora que se muestre un mensaje indicando que no se ha podido identificar el elemento
