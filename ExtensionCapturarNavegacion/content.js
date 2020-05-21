@@ -17,7 +17,6 @@ function clickHandler(event){
 	let tipo = event.srcElement.localName;
 
 	//Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
-	
 	if(tipo == 'button' || tipo == 'a' || tipo == 'input' || tipo == 'select'){
 		mensaje = {
 			id: event.srcElement.id,

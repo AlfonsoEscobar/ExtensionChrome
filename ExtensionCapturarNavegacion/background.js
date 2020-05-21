@@ -77,8 +77,8 @@ function save() {
 function terminando(){
 
 	chrome.downloads.download({
-		url: save(),
-		filename: "Test",
+		url: saveFunctionJava(),
+		filename: "Test.txt",
 		saveAs: true
 	});
 
@@ -134,4 +134,50 @@ function log(mensaje){
 	if(debug){
 		console.log(mensaje);
 	}
+}
+
+
+function saveFunctionJava() {
+    var htmlContent = "";
+    for (i in secuencia) {
+        if (i == 0) {
+            htmlContent = [secuencia[i].url + "\n"];
+        }
+    }
+    htmlContent = [htmlContent + diferenciarEventos(secuencia)];
+    var bl = new Blob(htmlContent, {
+        type: "text/txt"
+    });
+    return URL.createObjectURL(bl);
+}
+
+
+function diferenciarEventos(secuencia) {
+    var javaFunciones = "";
+    for (i in secuencia) {
+        if (secuencia[i].typeEvent == "click") {
+            if (secuencia[i].id != "") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + secuencia[i].id + "));" + "\n"];
+            } else if (secuencia[i].name != "") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + secuencia[i].name + "));" + "\n"];
+            } else if (secuencia[i].linkText != "") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + secuencia[i].linkText + "));" + "\n"];
+            } else if (secuencia[i].path != "") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.path (" + secuencia[i].path + "))" + "\n"];
+            } else {
+                javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
+            }
+        } else if (secuencia[i].typeEvent == "change") {
+            if (secuencia[i].id != "") {
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + secuencia[i].id + ", " + secuencia[i].value + "));" + "\n"];
+            } else if (secuencia[i].name != "") {
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + secuencia[i].name + ", " + secuencia[i].value + "));" + "\n"];
+            }else if (secuencia[i].path != "") {
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.path (" + secuencia[i].path + ", " + secuencia[i].value + "))" + "\n"];
+            } else {
+                javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
+            }
+        }
+    }
+    return javaFunciones;
 }
