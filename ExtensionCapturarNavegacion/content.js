@@ -15,7 +15,7 @@ function clickHandler(event) {
     let mandar = false;
     let tipo = event.srcElement.localName;
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
-    if (tipo == 'button' || tipo == 'a' || tipo == 'input' || tipo == 'select') {
+    if (tipo == 'button' || tipo == 'input' || tipo == 'select') {
         var miobjeto = new DatosEvento(event.srcElement.id, event.srcElement.name, event.srcElement.localName, event.type, null);
         mandar = true;
     }
