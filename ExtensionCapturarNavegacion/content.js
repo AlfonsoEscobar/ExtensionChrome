@@ -24,7 +24,7 @@ function clickHandler(event) {
             path = path + "/" + event.path[i].nodeName;
         }
         // Volcamos todos los datos a nuestro objeto para enviarlo
-        var miobjeto = new DatosEvento(event.srcElement.id, event.srcElement.name, event.srcElement.localName, event.type, null, event.srcElement.textContent, path);
+        var miobjeto = new DatosEvento(event.srcElement.id, event.srcElement.name, event.srcElement.localName, event.type, event.srcElement.value, event.srcElement.textContent, path);
         mandar = true;
     }
     //Solo si la varible "mandar" es igual a true, es decir a dado en un elemento valido
@@ -35,7 +35,7 @@ function clickHandler(event) {
 };
 //Es el evento que esta a la escucha de cualquier cambio de foco, lo utilizamos para recoger las variables
 // de los elementos input y select
-document.addEventListener("change", updateValue);
+window.addEventListener("change", updateValue);
 
 function updateValue(e) {
     var path = "";

@@ -108,7 +108,7 @@ function save() {
     });
     return URL.createObjectURL(bl);
 }
-
+// Funcion que se utiliza para guardar la informacion en un archivo con metodos Java
 function saveFunctionJava() {
     var htmlContent = "";
     for (i in secuencia) {
@@ -152,13 +152,3 @@ function diferenciarEventos(secuencia) {
     }
     return javaFunciones;
 }
-
-// Evento click
-// -        Si el elemento está identificado por ID: waitElementAndClick (By.id (IDENTIFICADOR));
-// -        Si el elemento está identificado por NAME: waitElementAndClick (By.name (NOMBRE));
-// -        Si el elemento está identificado por el LINK: waitElementAndClick (By.linkText (NOMBRE));
-// -        En otro caso habrá que utilizar el Path, por ahora que se muestre un mensaje indicando que no se ha podido identificar el elemento
-// Evento change
-// -        Si el elemento está identificado por ID: waitElementAndSendKeys (By.id (ID), VALOR);
-// -        Si el elemento está identificado por NAME: waitElementAndSendKeys (By.name (NOMBRE), VALOR);
-// -        En otro caso habrá que utilizar el Path, por ahora que se muestre un mensaje indicando que no se ha podido identificar el elemento

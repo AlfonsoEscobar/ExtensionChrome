@@ -19,9 +19,9 @@
 	   "scripts" : ["background.js"]
 	},
 	"icons": {
-	    "16" : "img/icon16.png",
-		"48" : "img/icon48.png",
-		"128": "img/icon128.png"
+	    "16" : "img/id16.png",
+		"48" : "img/id32.png",
+		"128": "img/id128.png"
 		},
 	"browser_action" : {
 		"default_icon" : "img/desactivate.png"
