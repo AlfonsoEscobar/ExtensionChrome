@@ -112,10 +112,9 @@ function saveFunctionJava() {
     for (i in secuencia) {
         if (i == 0) {
             htmlContent = [secuencia[i].url + "\n"];
-        } else {
-            htmlContent = [htmlContent + diferenciarEventos(secuencia)];
         }
     }
+    htmlContent = [htmlContent + diferenciarEventos(secuencia)];
     var bl = new Blob(htmlContent, {
         type: "text/txt"
     });
@@ -127,15 +126,19 @@ function diferenciarEventos(secuencia) {
     for (i in secuencia) {
         if (secuencia[i].typeEvent === "click") {
             if (secuencia[i].id != "null") {
-                javaFunciones = ["waitElementAndClick(By.id (" + secuencia[i].id + "))" + "\n"];
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.id (" + secuencia[i].id + "))" + "\n"];
             } else if (secuencia[i].name != null && secuencia[i].id == null) {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.name (" + secuencia[i].name + "))" + "\n"];
+            } else {
+                javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
             }
         } else if (secuencia[i].typeEvent === "change") {
-        	 if (secuencia[i].id != "null") {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id (" + secuencia[i].id +", "+ secuencia[i].value + "))" + "\n"];
+            if (secuencia[i].id != "null") {
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id (" + secuencia[i].id + ", " + secuencia[i].value + "))" + "\n"];
             } else if (secuencia[i].name != null && secuencia[i].id == null) {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name (" + secuencia[i].name +", "+ secuencia[i].value + "))" + "\n"];
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name (" + secuencia[i].name + ", " + secuencia[i].value + "))" + "\n"];
+            } else {
+                javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
             }
         }
     }
@@ -145,8 +148,8 @@ function diferenciarEventos(secuencia) {
 // -        Si el elemento está identificado por ID: waitElementAndClick (By.id (IDENTIFICADOR));
 // -        Si el elemento está identificado por NAME: waitElementAndClick (By.name (NOMBRE));
 // -FALTA ESTO        Si el elemento está identificado por el LINK: waitElementAndClick (By.linkText (NOMBRE));
-// -FALTA ESTO          En otro caso habrá que utilizar el Path, por ahora que se muestre un mensaje indicando que no se ha podido identificar el elemento
+// -        En otro caso habrá que utilizar el Path, por ahora que se muestre un mensaje indicando que no se ha podido identificar el elemento
 // Evento change
 // -        Si el elemento está identificado por ID: waitElementAndSendKeys (By.id (ID), VALOR);
 // -        Si el elemento está identificado por NAME: waitElementAndSendKeys (By.name (NOMBRE), VALOR);
-// -FALTA ESTO         En otro caso habrá que utilizar el Path, por ahora que se muestre un mensaje indicando que no se ha podido identificar el elemento
+// -		En otro caso habrá que utilizar el Path, por ahora que se muestre un mensaje indicando que no se ha podido identificar el elemento
