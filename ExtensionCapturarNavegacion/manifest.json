@@ -1,6 +1,6 @@
 {
 	"manifest_version": 2,
-	"name": "Capturar Evento clik",
+	"name": "Capturar Eventos",
 	"version": "1.0",
 	"description": "Extension para Capturar los Eventos producidos en el navegador.",
 	"permissions": [
