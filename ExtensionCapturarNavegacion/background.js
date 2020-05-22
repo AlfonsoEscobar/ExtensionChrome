@@ -1,22 +1,16 @@
 //Icono de activado
-var iconAct = "img/activatev.png";
-
+var iconAct = "img/activate.png";
 //Icono desactivado
 var iconDes = "img/desactivate.png";
-
 //Array donde se guardaran los eventos que vayan grabando
 var secuencia = [];
-
 // Inicializacion del objeto que se va guardando
 var mensaje = {};
-
 // Variable para que empiece o termine dependiendo de si es la primera o segunda vez de pulsar el
 //icono de la extension
 var pulsado = true;
-
 // Variable para motrar mensajes por la consola del navegador
 var debug = true;
-
 
 //Se pone en funcionamiento o se apaga solo cuando se le da click al icono
 chrome.browserAction.onClicked.addListener( function() {
@@ -28,10 +22,9 @@ chrome.browserAction.onClicked.addListener( function() {
 		terminando();
 		pulsado = !pulsado;
 	}
-
 });
 
-
+// Es la funcion que una vez se enciende la grabacion recibe los mensajes del content
 function empezando(){
 
 	log(">>>>>>>>>> En funcionamiento <<<<<<<<<<");
@@ -39,8 +32,6 @@ function empezando(){
 	crearNotificacion("on", "Empezando a grabar", iconAct, "Empezando a grabar", 3000);
 
 	chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-		// console.log(tabs);
-
 		mensaje = {
 			url: tabs[0].url
 		}
@@ -93,21 +84,19 @@ function terminando(){
 // Es la funcion que se le llama para recibir el mensaje y se vuelve a llamar cuando se termina para 
 // el "removeListener"
 const oyente = function listener(request, sender, sendResponse) {
-
-	mensaje = {
-		id: request.id,
-		name: request.name,
-		elementType: request.elementType,
-		typeEvent: request.typeEvent,
-		value: request.value
-	}
-	console.log(mensaje);
-
-	//Guardamos los objetos segun van llegando
-	secuencia.push(mensaje);
-
-	log("Nº de secuencia >>>>>> " + secuencia.length);
-
+    mensaje = {
+        id: request.id,
+        name: request.name,
+        elementType: request.elementType,
+        typeEvent: request.typeEvent,
+        value: request.value,
+        linkText: request.linkText,
+        path: request.path
+    }
+    console.log(mensaje);
+    //Guardamos los objetos segun van llegando
+    secuencia.push(mensaje);
+    log("Nº de secuencia >>>>>> " + secuencia.length);
 }
 
 // Funcion que crea notificaciones solo cuando empieza la grabacion y cuando termina
@@ -136,7 +125,7 @@ function log(mensaje){
 	}
 }
 
-
+// Funcion que guarda toda la informacion del array de la secuencia y llama a las funciones Java
 function saveFunctionJava() {
     var htmlContent = "";
     for (i in secuencia) {
@@ -151,29 +140,33 @@ function saveFunctionJava() {
     return URL.createObjectURL(bl);
 }
 
-
+// Es la funcion que dependiendo del tipo de evento y de lo que se haya capturado
+// llamara a una funcion Java o a otra, y al final devuelve un String con todas las sentencias
 function diferenciarEventos(secuencia) {
     var javaFunciones = "";
     for (i in secuencia) {
+        if(secuencia[0].url != ""){
+			javaFunciones = [javaFunciones + " driver.get(" + "\"" + secuencia[i].url + "\"" + ");" + "\n"];
+		}
         if (secuencia[i].typeEvent == "click") {
-            if (secuencia[i].id != "") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + secuencia[i].id + "));" + "\n"];
-            } else if (secuencia[i].name != "") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + secuencia[i].name + "));" + "\n"];
-            } else if (secuencia[i].linkText != "") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + secuencia[i].linkText + "));" + "\n"];
-            } else if (secuencia[i].path != "") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.path (" + secuencia[i].path + "))" + "\n"];
+            if (secuencia[i] && secuencia[i].id != "") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"))" + "\n"];
+            } else if (secuencia[i] && secuencia[i].name != "") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"))" + "\n"];
+            } else if (secuencia[i] && secuencia[i].linkText != "") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"))" + "\n"];
+            } else if (secuencia[i] && secuencia[i].path != "") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"))" + "\n"];
             } else {
                 javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
             }
         } else if (secuencia[i].typeEvent == "change") {
-            if (secuencia[i].id != "") {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + secuencia[i].id + ", " + secuencia[i].value + "));" + "\n"];
-            } else if (secuencia[i].name != "") {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + secuencia[i].name + ", " + secuencia[i].value + "));" + "\n"];
-            }else if (secuencia[i].path != "") {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.path (" + secuencia[i].path + ", " + secuencia[i].value + "))" + "\n"];
+            if (secuencia[i] && secuencia[i].id != "") {
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\"" + ", " + "\"" + secuencia[i].value + "\"" + "))" + "\n"];
+            } else if (secuencia[i] && secuencia[i].name != "") {
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + "\"" + secuencia[i].name + "\"" + ", " + "\"" + secuencia[i].value + "\"" + "))" + "\n"];
+            } else if (secuencia[i] && secuencia[i].path != "") {
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.xpath(" + "\"" + secuencia[i].path + "\"" + ", " + "\"" + secuencia[i].value + "\"" + "))" + "\n"];
             } else {
                 javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
             }
