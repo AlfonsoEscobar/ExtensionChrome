@@ -110,12 +110,7 @@ function save() {
 }
 // Funcion que se utiliza para guardar la informacion en un archivo con metodos Java
 function saveFunctionJava() {
-    var htmlContent = "";
-    for (i in secuencia) {
-        if (i == 0) {
-            htmlContent = [secuencia[i].url + "\n"];
-        }
-    }
+    var htmlContent = "";   
     htmlContent = [htmlContent + diferenciarEventos(secuencia)];
     var bl = new Blob(htmlContent, {
         type: "text/txt"
@@ -125,18 +120,25 @@ function saveFunctionJava() {
 
 function diferenciarEventos(secuencia) {
     var javaFunciones = "";
+    if (secuencia[0].url != "") {
+        javaFunciones = [javaFunciones + "driver.get(" + "\"" + secuencia[0].url + "\"" + ");" + "\n"];
+    }
     for (i in secuencia) {
         if (secuencia[i].typeEvent == "click") {
-            if (secuencia[i] && secuencia[i].id != "") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"))" + "\n"];
-            } else if (secuencia[i] && secuencia[i].name != "") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"))" + "\n"];
-            } else if (secuencia[i] && secuencia[i].linkText != "") {
+            if (secuencia[i].elementType == "a") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"))" + "\n"];
-            } else if (secuencia[i] && secuencia[i].path != "") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"))" + "\n"];
             } else {
-                javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
+                if (secuencia[i] && secuencia[i].id != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"))" + "\n"];
+                } else if (secuencia[i] && secuencia[i].name != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"))" + "\n"];
+                } else if (secuencia[i] && secuencia[i].linkText != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"))" + "\n"];
+                } else if (secuencia[i] && secuencia[i].path != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"))" + "\n"];
+                } else {
+                    javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
+                }
             }
         } else if (secuencia[i].typeEvent == "change") {
             if (secuencia[i] && secuencia[i].id != "") {

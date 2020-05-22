@@ -10,6 +10,7 @@ function DatosEvento(id, name, elementType, typeEvent, value, linkText, path) {
 }
 //Esta a la escucha del evento click en todo el DOM y llama a la funcion "clickHandler"
 document.addEventListener("click", clickHandler);
+
 //Es la funcion que se encarga de recoger el evento del click
 function clickHandler(event) {
     //Inicializa la variable "mandar" a falso para que solo cuando es un click valido se mande la informacion
