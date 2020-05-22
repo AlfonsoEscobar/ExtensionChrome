@@ -128,11 +128,6 @@ function log(mensaje){
 // Funcion que guarda toda la informacion del array de la secuencia y llama a las funciones Java
 function saveFunctionJava() {
     var htmlContent = "";
-    for (i in secuencia) {
-        if (i == 0) {
-            htmlContent = [secuencia[i].url + "\n"];
-        }
-    }
     htmlContent = [htmlContent + diferenciarEventos(secuencia)];
     var bl = new Blob(htmlContent, {
         type: "text/txt"
@@ -143,11 +138,11 @@ function saveFunctionJava() {
 // Es la funcion que dependiendo del tipo de evento y de lo que se haya capturado
 // llamara a una funcion Java o a otra, y al final devuelve un String con todas las sentencias
 function diferenciarEventos(secuencia) {
-    var javaFunciones = "";
+	var javaFunciones = "";
+	if(secuencia[0].url != ""){
+		javaFunciones = [javaFunciones + " driver.get(" + "\"" + secuencia[0].url + "\"" + ");" + "\n"];
+	}
     for (i in secuencia) {
-        if(secuencia[0].url != ""){
-			javaFunciones = [javaFunciones + " driver.get(" + "\"" + secuencia[i].url + "\"" + ");" + "\n"];
-		}
         if (secuencia[i].typeEvent == "click") {
             if (secuencia[i] && secuencia[i].id != "") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"))" + "\n"];

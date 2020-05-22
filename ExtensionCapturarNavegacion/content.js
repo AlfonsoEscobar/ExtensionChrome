@@ -11,19 +11,19 @@ function DatosEvento(id, name, elementType, typeEvent, value, linkText, path) {
 //Esta a la escucha del evento click en todo el DOM y llama a la funcion "clickHandler"
 document.addEventListener("click", clickHandler);
 
-window.addEventListener("load", onLoadHandler);
-function onLoadHandler(e) {
-    console.log("JMP->En onLoadHandler...");
-    for (let idx = 0; idx < window.frames.length; idx++) {
-        console.log("JMP->Asociando listener a frame:" + idx);
-        window.frames[idx].addEventListener("click", clickHandler);
-		window.frames[idx].addEventListener("change", updateValue);
-    }
+// window.addEventListener("load", onLoadHandler);
+// function onLoadHandler(e) {
+//     console.log("JMP->En onLoadHandler...");
+//     for (let idx = 0; idx < window.frames.length; idx++) {
+//         console.log("JMP->Asociando listener a frame:" + idx);
+//         window.frames[idx].addEventListener("click", clickHandler);
+// 		window.frames[idx].addEventListener("change", updateValue);
+//     }
    
-    console.log("JMP->Asociando listener a document");
-    document.addEventListener("click", clickHandler);
-	document.addEventListener("change", updateValue);
-}
+//     console.log("JMP->Asociando listener a document");
+//     document.addEventListener("click", clickHandler);
+// 	document.addEventListener("change", updateValue);
+// }
 
 //Es la funcion que se encarga de recoger el evento del click
 function clickHandler(event) {
@@ -61,6 +61,6 @@ function updateValue(e) {
         path = path + "/" + e.path[i].nodeName;
     }
      var arrayPath = path.split("/");
-    var datos = new DatosEvento(e.srcElement.id, event.srcElement.name, e.srcElement.localName, e.type, e.srcElement.value, event.srcElement.textContent,path);
+    var datos = new DatosEvento(e.srcElement.id, e.srcElement.name, e.srcElement.localName, e.type, e.srcElement.value, e.srcElement.textContent,path);
     chrome.runtime.sendMessage(datos);
 }
