@@ -126,6 +126,9 @@ function saveFunctionJava() {
 function diferenciarEventos(secuencia) {
     var javaFunciones = "";
     for (i in secuencia) {
+        if(secuencia[0].url != ""){
+			javaFunciones = [javaFunciones + " driver.get(" + "\"" + secuencia[i].url + "\"" + ");" + "\n"];
+		}
         if (secuencia[i].typeEvent == "click") {
             if (secuencia[i] && secuencia[i].id != "") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"))" + "\n"];
