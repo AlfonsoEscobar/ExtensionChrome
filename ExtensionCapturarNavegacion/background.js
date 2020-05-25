@@ -124,9 +124,6 @@ function diferenciarEventos(secuencia) {
         javaFunciones = [javaFunciones + "driver.get(" + "\"" + secuencia[0].url + "\"" + ");" + "\n"];
     }
     for (i in secuencia) {
-        if(secuencia[0].url != ""){
-			javaFunciones = [javaFunciones + " driver.get(" + "\"" + secuencia[i].url + "\"" + ");" + "\n"];
-		}
         if (secuencia[i].typeEvent == "click") {
             if (secuencia[i].elementType == "a") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"))" + "\n"];
