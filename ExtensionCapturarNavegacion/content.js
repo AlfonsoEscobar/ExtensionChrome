@@ -40,6 +40,7 @@ function keypressed(ev) {
                                         null
                                         );
                         chrome.runtime.sendMessage(miobjeto);
+                        break;
                     }
                 }
             }
@@ -56,7 +57,7 @@ function clickHandler(event) {
     let tipo = event.srcElement.localName;
     var path = "";
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
-    if (tipo == 'a' || tipo == 'button' || tipo == 'input' || tipo == 'select') {
+    if (tipo == 'a' || tipo == 'button' || tipo == 'input' || tipo == 'select' || tipo == 'submit' || tipo == 'reset') {
         // con esto recogemos todo el path del evento y lo guardamos en un string
         for (var i = 0; i < event.path.length; i++) {
             path = path + "/" + event.path[i].nodeName;
@@ -84,10 +85,6 @@ function updateValue(e) {
     var datos = new DatosEvento(e.srcElement.id, e.srcElement.name, e.srcElement.localName, e.type, e.srcElement.value, e.srcElement.textContent,path);
     chrome.runtime.sendMessage(datos);
 }
-
-
-
-
 
 
 //Esta a la escucha del evento click en todo el DOM y llama a la funcion "clickHandler"
