@@ -8,8 +8,6 @@ function DatosEvento(id, name, elementType, typeEvent, value, linkText, path) {
     this.linkText = linkText;
     this.path = path;
 }
-//Esta a la escucha del evento click en todo el DOM y llama a la funcion "clickHandler"
-document.addEventListener("click", clickHandler);
 
 // window.addEventListener("load", onLoadHandler);
 // function onLoadHandler(e) {
@@ -24,6 +22,31 @@ document.addEventListener("click", clickHandler);
 //     document.addEventListener("click", clickHandler);
 // 	document.addEventListener("change", updateValue);
 // }
+
+function keypressed(ev) {
+    var codigo = ev.which || ev.keyCode;
+    if(codigo === 13){
+        for (let i = 0; i < ev.path; i++){
+            if(ev.path[i] == "form"){
+                for (let x = 0; x < ev.path[i]; x++){
+                    if(ev.path[i][x].type == "submit"){
+                        var miobjeto = new DatosEvento(
+                                        ev[i][x].id,
+                                        ev[i][x].name,
+                                        ev[i][x].localName,
+                                        "click",
+                                        null,
+                                        ev[i][x].textContent,
+                                        null
+                                        );
+                        chrome.runtime.sendMessage(miobjeto);
+                    }
+                }
+            }
+        }
+    }
+    
+}
 
 //Es la funcion que se encarga de recoger el evento del click
 function clickHandler(event) {
@@ -52,9 +75,6 @@ function clickHandler(event) {
     }
 };
 
-//Es el evento que esta a la escucha de cualquier cambio de foco, lo utilizamos para recoger las variables
-// de los elementos input y select
-document.addEventListener("change", updateValue);
 function updateValue(e) {
     var path = "";
     for (var i = 0; i < e.path.length; i++) {
@@ -64,3 +84,19 @@ function updateValue(e) {
     var datos = new DatosEvento(e.srcElement.id, e.srcElement.name, e.srcElement.localName, e.type, e.srcElement.value, e.srcElement.textContent,path);
     chrome.runtime.sendMessage(datos);
 }
+
+
+
+
+
+
+//Esta a la escucha del evento click en todo el DOM y llama a la funcion "clickHandler"
+document.addEventListener("click", clickHandler);
+
+//Esta a la escucha del evento que se producce al pulsar una tecla en el DOM y llama a la funcion "keypressed"
+document.addEventListener("keypress", keypressed);
+
+
+//Es el evento que esta a la escucha de cualquier cambio de foco, lo utilizamos para recoger las variables
+// de los elementos input y select
+document.addEventListener("change", updateValue);
