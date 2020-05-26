@@ -8,8 +8,9 @@ function DatosEvento(id, name, elementType, typeEvent, value, linkText, path) {
     this.linkText = linkText;
     this.path = path;
 }
-//Esta a la escucha del evento click en todo el DOM y llama a la funcion "clickHandler"
 document.addEventListener("click", clickHandler);
+document.addEventListener("change", updateValue);
+window.addEventListener("keypress", keypressed);
 //Es la funcion que se encarga de recoger el evento del click
 function clickHandler(event) {
     //Inicializa la variable "mandar" a falso para que solo cuando es un click valido se mande la informacion
@@ -18,7 +19,7 @@ function clickHandler(event) {
     let tipo = event.srcElement.localName;
     var path = "";
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
-    if (tipo == 'a' || tipo == 'button' || tipo == 'input' || tipo == 'select' || tipo == 'submit' || tipo == 'reset') {
+    if (tipo == 'a' || tipo == 'button' || tipo == 'select' || tipo == 'submit' || tipo == 'reset') {
         // con esto recogemos todo el path del evento y lo guardamos en un string(lo ponemos a lenght -1 para que tome desde el document)
         for (var i = 0; i < event.path.length - 1; i++) {
             path = path + "/" + event.path[i].nodeName;
@@ -33,9 +34,6 @@ function clickHandler(event) {
         chrome.runtime.sendMessage(miobjeto);
     }
 };
-//Es el evento que esta a la escucha de cualquier cambio de foco, lo utilizamos para recoger las variables
-// de los elementos input y select
-window.addEventListener("change", updateValue);
 
 function updateValue(e) {
     var path = "";
@@ -45,14 +43,14 @@ function updateValue(e) {
     var datos = new DatosEvento(e.srcElement.id, event.srcElement.name, e.srcElement.localName, e.type, e.srcElement.value, event.srcElement.textContent, path);
     chrome.runtime.sendMessage(datos);
 }
-//Esta a la escucha del evento que se producce al pulsar Enter y llama a la funcion "keypressed"
-document.addEventListener("keypress", keypressed);
 
 function keypressed(ev) {
     var codigo = ev.which || ev.keyCode;
+    
     if (codigo === 13) {
+    	debugger;
         for (var i = 0; i < ev.path; i++) {
-            if (ev.path[i] == "form") {
+             if (ev.path[i] == "form") {
                 for (let x = 0; x < ev.path[i]; x++) {
                     if (ev.path[i][x].type == "submit") {
                         var miobjeto = new DatosEvento(ev[i][x].id, ev[i][x].name, ev[i][x].localName, "click", null, ev[i][x].textContent, null);
@@ -62,5 +60,23 @@ function keypressed(ev) {
             }
         }
     }
-
 }
+// haciendo pruebas con el frame
+// window.addEventListener("load", onLoadHandler);
+// function onLoadHandler(e) {
+//     let currentWindow = window;
+//     let currentParentWindow;
+//     let frameLocation = ""
+//     while (currentWindow !== window.top) {
+//         currentParentWindow = currentWindow.parent;
+//         for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
+//             if (currentParentWindow.frames[idx] === currentWindow) {
+//                 console.log("JMP->Asociando listener a frame:" + idx);
+//                 window.frames[idx].addEventListener("click", clickHandler);
+//                 window.frames[idx].addEventListener("change", updateValue);
+//             }
+//     }
+//     console.log("JMP->Asociando listener a document");
+//     document.addEventListener("click", clickHandler);
+//     document.addEventListener("change", updateValue);
+// }
