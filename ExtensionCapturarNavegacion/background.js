@@ -96,7 +96,6 @@ const oyente = function listener(request, sender, sendResponse) {
     console.log(mensaje);
     //Guardamos los objetos segun van llegando
 	secuencia.push(mensaje);
-	crearNotificacion("evento", "Evento grabado", iconDes, "Evento grabado", 1000);
     log("Nº de secuencia >>>>>> " + secuencia.length);
 }
 
