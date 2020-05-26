@@ -1,7 +1,7 @@
 //Icono de activado
-var iconAct = "img/activate.png";
+var iconAct = "img/activado1.png";
 //Icono desactivado
-var iconDes = "img/desactivate.png";
+var iconDes = "img/desactivado1.png";
 //Array donde se guardaran los eventos que vayan grabando
 var secuencia = [];
 // Inicializacion del objeto que se va guardando
@@ -95,7 +95,8 @@ const oyente = function listener(request, sender, sendResponse) {
     }
     console.log(mensaje);
     //Guardamos los objetos segun van llegando
-    secuencia.push(mensaje);
+	secuencia.push(mensaje);
+	crearNotificacion("evento", "Evento grabado", iconDes, "Evento grabado", 1000);
     log("Nº de secuencia >>>>>> " + secuencia.length);
 }
 
@@ -138,30 +139,34 @@ function saveFunctionJava() {
 // Es la funcion que dependiendo del tipo de evento y de lo que se haya capturado
 // llamara a una funcion Java o a otra, y al final devuelve un String con todas las sentencias
 function diferenciarEventos(secuencia) {
-	var javaFunciones = "";
-	if(secuencia[0].url != ""){
-		javaFunciones = [javaFunciones + " driver.get(" + "\"" + secuencia[0].url + "\"" + ");" + "\n"];
-	}
+    var javaFunciones = "";
+    if (secuencia[0].url != "") {
+        javaFunciones = [javaFunciones + "driver.get(" + "\"" + secuencia[0].url + "\"" + ");" + "\n"];
+    }
     for (i in secuencia) {
         if (secuencia[i].typeEvent == "click") {
-            if (secuencia[i] && secuencia[i].id != "") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"))" + "\n"];
-            } else if (secuencia[i] && secuencia[i].name != "") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"))" + "\n"];
-            } else if (secuencia[i] && secuencia[i].linkText != "") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"))" + "\n"];
-            } else if (secuencia[i] && secuencia[i].path != "") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"))" + "\n"];
+            if (secuencia[i].elementType == "a") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
             } else {
-                javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
+                if (secuencia[i] && secuencia[i].id != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
+                } else if (secuencia[i] && secuencia[i].name != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"));" + "\n"];
+                } else if (secuencia[i] && secuencia[i].linkText != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
+                } else if (secuencia[i] && secuencia[i].path != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
+                } else {
+                    javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
+                }
             }
         } else if (secuencia[i].typeEvent == "change") {
             if (secuencia[i] && secuencia[i].id != "") {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\"" + ", " + "\"" + secuencia[i].value + "\"" + "))" + "\n"];
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\")" + ", \"" + secuencia[i].value +  "\");" + "\n"];
             } else if (secuencia[i] && secuencia[i].name != "") {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + "\"" + secuencia[i].name + "\"" + ", " + "\"" + secuencia[i].value + "\"" + "))" + "\n"];
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + "\"" + secuencia[i].name + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
             } else if (secuencia[i] && secuencia[i].path != "") {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.xpath(" + "\"" + secuencia[i].path + "\"" + ", " + "\"" + secuencia[i].value + "\"" + "))" + "\n"];
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.xpath(" + "\"" + secuencia[i].path + "\")" + ", \"" + secuencia[i].value  + "\");" + "\n"];
             } else {
                 javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
             }
