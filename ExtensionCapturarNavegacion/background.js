@@ -1,9 +1,8 @@
 //Icono de activado
-var iconAct = "img/activatev.png";
+var iconAct = "img/activate.png";
 //Icono desactivado
 var iconDes = "img/desactivate.png";
-// Icono grabando
-var iconRec = "img/record.png";
+
 //Array donde se guardaran los eventos que vayan grabando
 var secuencia = [];
 // Inicializacion del objeto que se va guardando
@@ -71,7 +70,7 @@ const oyente = function listener(request, sender, sendResponse) {
     console.log(mensaje);
     //Guardamos los objetos segun van llegando
     secuencia.push(mensaje);
-    crearNotificacion("on", "Capturando eventos", iconRec, "Evento grabado", 1200);
+    crearNotificacion("on", "Capturando eventos", iconAct, "Evento grabado", 1200);
     log("Nº de secuencia >>>>>> " + secuencia.length);
 }
 // Funcion que crea notificaciones solo cuando empieza la grabacion y cuando termina

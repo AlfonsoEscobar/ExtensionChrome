@@ -48,7 +48,6 @@ function keypressed(ev) {
     var codigo = ev.which || ev.keyCode;
     
     if (codigo === 13) {
-    	debugger;
         for (var i = 0; i < ev.path; i++) {
              if (ev.path[i] == "form") {
                 for (let x = 0; x < ev.path[i]; x++) {
