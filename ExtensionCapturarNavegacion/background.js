@@ -70,7 +70,6 @@ const oyente = function listener(request, sender, sendResponse) {
     console.log(mensaje);
     //Guardamos los objetos segun van llegando
     secuencia.push(mensaje);
-    crearNotificacion("on", "Capturando eventos", iconAct, "Evento grabado", 1200);
     log("Nº de secuencia >>>>>> " + secuencia.length);
 }
 // Funcion que crea notificaciones solo cuando empieza la grabacion y cuando termina
