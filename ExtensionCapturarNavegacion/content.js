@@ -1,33 +1,39 @@
 // Constructor del objeto que luego queremos enviar al background
-function DatosEvento(id, name, elementType, typeEvent, value, linkText, parentNode, path) {
+function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerText, path) {
     this.id = id;
     this.name = name;
     this.elementType = elementType;
     this.typeEvent = typeEvent;
     this.value = value;
     this.linkText = linkText;
-    this.parentNode = parentNode;
+    this.innerText = innerText;
     this.path = path;
 }
 document.addEventListener("click", clickHandler);
 document.addEventListener("change", updateValue);
 document.addEventListener("keypress", keypressed);
+
 //Es la funcion que se encarga de recoger el evento del click
 function clickHandler(event) {
     //Inicializa la variable "mandar" a falso para que solo cuando es un click valido se mande la informacion
     // al background
-    console.log(event);
     let mandar = false;
     let tipo = event.srcElement.localName;
     var path = "";
+    var pathCells = "";
+
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
-    if (tipo == 'a' || tipo == 'button' || tipo == 'select' || tipo == 'submit' || tipo == 'reset') {
-        // con esto recogemos todo el path del evento y lo guardamos en un string(lo ponemos a lenght -1 para que tome desde el document)
-        for (var i = 0; i < event.path.length - 1; i++) {
-            path = event.path[i].nodeName + "/" + path;
+    if (tipo == 'td' || tipo == 'a' || tipo == 'button' || tipo == 'select' || tipo == 'submit' || tipo == 'reset') {
+        // con esto recogemos todo el path del evento y lo guardamos en un string(lo ponemos a lenght -2 para que tome desde html)
+        for (var i = 0; i < event.path.length - 2; i++) {
+            path = "/" + event.path[i].nodeName + path;
+        }
+        // Con este for recorremos el tr para guardar los td que puedan estar dentro.
+        for (var i = 0; i < event.path[1].cells.length; i++) {
+            pathCells = pathCells + "<td>" + event.path[1].cells[i].innerText + "</td>";
         }
         // Volcamos todos los datos a nuestro objeto para enviarlo
-        var miobjeto = new DatosEvento(event.srcElement.id, event.srcElement.name, event.srcElement.localName, event.type, event.srcElement.value, event.srcElement.textContent, event.srcElement.parentNode.localName, path);
+        var miobjeto = new DatosEvento(event.srcElement.id, event.srcElement.name, event.srcElement.localName, event.type, event.srcElement.value, event.srcElement.textContent, pathCells, path.toLowerCase());
         mandar = true;
     }
     //Solo si la varible "mandar" es igual a true, es decir a dado en un elemento valido
@@ -42,7 +48,7 @@ function updateValue(e) {
     for (var i = 0; i < e.path.length - 1; i++) {
         path = path + "/" + e.path[i].nodeName;
     }
-    var datos = new DatosEvento(e.srcElement.id, e.srcElement.name, e.srcElement.localName, e.type, e.srcElement.value, e.srcElement.textContent, e.srcElement.parentNode.localName, path);
+    var datos = new DatosEvento(e.srcElement.id, e.srcElement.name, e.srcElement.localName, e.type, e.srcElement.value, e.srcElement.textContent, e.srcElement.parentNode.localName, path.toLowerCase());
     chrome.runtime.sendMessage(datos);
 }
 

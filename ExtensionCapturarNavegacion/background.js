@@ -64,7 +64,7 @@ const oyente = function listener(request, sender, sendResponse) {
         typeEvent: request.typeEvent,
         value: request.value,
         linkText: request.linkText,
-        parentNode: request.parentNode,
+        innerText: request.innerText,
         path: request.path
     }
     console.log(mensaje);
@@ -101,7 +101,7 @@ function save() {
         if (i == 0) {
             htmlContent = ["/** " + secuencia[i].url + "\n"];
         } else {
-            htmlContent = [htmlContent + "ID: " + secuencia[i].id + " - NAME: " + secuencia[i].name + " - ELEMENT_TYPE: " + secuencia[i].elementType + " - TYPE_EVENT: " + secuencia[i].typeEvent + " - VALUE: " + secuencia[i].value +" - parentNode: " + secuencia[i].parentNode + "\nPATH: " + secuencia[i].path + "\n"];
+            htmlContent = [htmlContent + "ID: " + secuencia[i].id + " - NAME: " + secuencia[i].name + " - ELEMENT_TYPE: " + secuencia[i].elementType + " - TYPE_EVENT: " + secuencia[i].typeEvent + " - VALUE: " + secuencia[i].value + "\nPATH: " + secuencia[i].path + "\n"];
         }
     }
     htmlContent = htmlContent + "**/\n";
@@ -124,34 +124,33 @@ function diferenciarEventos(secuencia) {
     }
     for (i in secuencia) {
         if (secuencia[i].typeEvent == "click") {
-            if (secuencia[i].parentNode == "td") {
-                if (secuencia[i].elementType == "a") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[" + secuencia[i].linkText + "]\"));" + "\n"];
-                }
+            if (secuencia[i].elementType == "a") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
+                // Con este if se puede extraer todos los td que puedan estar dentro de un tr
+                // } else if (secuencia[i].elementType == "td") {
+                //     javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[" + secuencia[i].innerText + "]\"));" + "\n"];
+            } else if (secuencia[i].elementType == "td") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else {
-                if (secuencia[i].elementType == "a") {
+                if (secuencia[i] && secuencia[i].id != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
+                } else if (secuencia[i] && secuencia[i].name != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"));" + "\n"];
+                } else if (secuencia[i] && secuencia[i].linkText != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
+                } else if (secuencia[i] && secuencia[i].path != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
                 } else {
-                    if (secuencia[i] && secuencia[i].id != "") {
-                        javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
-                    } else if (secuencia[i] && secuencia[i].name != "") {
-                        javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"));" + "\n"];
-                    } else if (secuencia[i] && secuencia[i].linkText != "") {
-                        javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
-                    } else if (secuencia[i] && secuencia[i].path != "") {
-                        javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[" + secuencia[i].linkText + "]\"));" + "\n"];
-                    } else {
-                        javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
-                    }
+                    javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
                 }
             }
         } else if (secuencia[i].typeEvent == "change") {
             if (secuencia[i] && secuencia[i].id != "") {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\"" + ", " + "\"" + secuencia[i].value + "\"" + "));" + "\n"];
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
             } else if (secuencia[i] && secuencia[i].name != "") {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + "\"" + secuencia[i].name + "\"" + ", " + "\"" + secuencia[i].value + "\"" + "));" + "\n"];
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + "\"" + secuencia[i].name + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
             } else if (secuencia[i] && secuencia[i].path != "") {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.xpath(" + "\"" + secuencia[i].path + "\"" + ", " + "\"" + secuencia[i].value + "\"" + "));" + "\n"];
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else {
                 javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
             }
