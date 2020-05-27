@@ -64,6 +64,7 @@ const oyente = function listener(request, sender, sendResponse) {
         typeEvent: request.typeEvent,
         value: request.value,
         linkText: request.linkText,
+        parentNode: request.parentNode,
         path: request.path
     }
     console.log(mensaje);
@@ -100,10 +101,10 @@ function save() {
         if (i == 0) {
             htmlContent = ["/** " + secuencia[i].url + "\n"];
         } else {
-            htmlContent = [htmlContent + "ID: " + secuencia[i].id + " - NAME: " + secuencia[i].name + " - ELEMENT_TYPE: " + secuencia[i].elementType + " - TYPE_EVENT: " + secuencia[i].typeEvent + " - VALUE: " + secuencia[i].value + "\nPATH: " + secuencia[i].path + "\n"];
+            htmlContent = [htmlContent + "ID: " + secuencia[i].id + " - NAME: " + secuencia[i].name + " - ELEMENT_TYPE: " + secuencia[i].elementType + " - TYPE_EVENT: " + secuencia[i].typeEvent + " - VALUE: " + secuencia[i].value +" - parentNode: " + secuencia[i].parentNode + "\nPATH: " + secuencia[i].path + "\n"];
         }
     }
-    htmlContent = htmlContent + " **/\n";
+    htmlContent = htmlContent + "**/\n";
     return htmlContent;
 }
 // Funcion que se utiliza para guardar la informacion en un archivo con metodos Java
@@ -123,19 +124,25 @@ function diferenciarEventos(secuencia) {
     }
     for (i in secuencia) {
         if (secuencia[i].typeEvent == "click") {
-            if (secuencia[i].elementType == "a") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
+            if (secuencia[i].parentNode == "td") {
+                if (secuencia[i].elementType == "a") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[" + secuencia[i].linkText + "]\"));" + "\n"];
+                }
             } else {
-                if (secuencia[i] && secuencia[i].id != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
-                } else if (secuencia[i] && secuencia[i].name != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"));" + "\n"];
-                } else if (secuencia[i] && secuencia[i].linkText != "") {
+                if (secuencia[i].elementType == "a") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
-                } else if (secuencia[i] && secuencia[i].path != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
                 } else {
-                    javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
+                    if (secuencia[i] && secuencia[i].id != "") {
+                        javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
+                    } else if (secuencia[i] && secuencia[i].name != "") {
+                        javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"));" + "\n"];
+                    } else if (secuencia[i] && secuencia[i].linkText != "") {
+                        javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
+                    } else if (secuencia[i] && secuencia[i].path != "") {
+                        javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[" + secuencia[i].linkText + "]\"));" + "\n"];
+                    } else {
+                        javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
+                    }
                 }
             }
         } else if (secuencia[i].typeEvent == "change") {
