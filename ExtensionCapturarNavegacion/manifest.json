@@ -22,7 +22,6 @@
 	    "16" : "img/desactivate.png",
 		"48" : "img/desactivate.png",
 		"128": "img/desactivate.png"
-
 		},
 	"browser_action" : {
 		"default_icon" : "img/desactivate.png"

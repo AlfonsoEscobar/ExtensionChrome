@@ -11,7 +11,7 @@ function DatosEvento(id, name, elementType, typeEvent, value, linkText, path) {
 document.addEventListener("click", clickHandler);
 document.addEventListener("change", updateValue);
 document.addEventListener("keypress", keypressed);
-document.addEventListener("mouseover", mouseHandler);
+
 //Es la funcion que se encarga de recoger el evento del click
 function clickHandler(event) {
     //Inicializa la variable "mandar" a falso para que solo cuando es un click valido se mande la informacion
@@ -61,19 +61,6 @@ function keypressed(ev) {
     }
 }
 
-// pruebas mouseove
-// function mouseHandler(even) {
-//     let tipo = even.srcElement.localName;
-//     var path = "";
-    
-//     if (tipo == 'a') {
-//         for (var i = 0; i < event.path.length - 1; i++) {
-//             path = path + "/" + even.path[i].nodeName;
-//         }
-//         var datos = new DatosEvento(even.srcElement.id, even.srcElement.name, even.srcElement.localName, even.type, even.srcElement.value, even.srcElement.textContent, null);
-//         console.log(datos);
-//     }
-// }
 // haciendo pruebas con el frame
 // window.addEventListener("load", onLoadHandler);
 // function onLoadHandler(e) {

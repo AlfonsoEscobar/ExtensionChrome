@@ -2,7 +2,6 @@
 var iconAct = "img/activate.png";
 //Icono desactivado
 var iconDes = "img/desactivate.png";
-
 //Array donde se guardaran los eventos que vayan grabando
 var secuencia = [];
 // Inicializacion del objeto que se va guardando
@@ -111,8 +110,13 @@ function save() {
 }
 // Funcion que se utiliza para guardar la informacion en un archivo con metodos Java
 function saveFunctionJava() {
-    var htmlContent = "";   
-    htmlContent = [htmlContent + diferenciarEventos(secuencia)];
+    var htmlContent = "";
+    for (i in secuencia) {
+        if (secuencia[i].typeEvent == "click" || secuencia[i].typeEvent == "change") {
+            htmlContent = [htmlContent + secuencia[i].id + " - " + secuencia[i].name + " - " + secuencia[i].elementType + " - " + secuencia[i].typeEvent + " - " + secuencia[i].value + " - " + secuencia[i].path + "\n"];
+        }
+    }
+    htmlContent = ["/**\n"+ htmlContent +"**/\n"+ diferenciarEventos(secuencia)];
     var bl = new Blob(htmlContent, {
         type: "text/txt"
     });
