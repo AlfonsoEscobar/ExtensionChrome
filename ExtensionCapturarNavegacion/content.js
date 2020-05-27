@@ -48,7 +48,6 @@ function keypressed(ev) {
                                         null
                                         );
                         chrome.runtime.sendMessage(miobjeto);
-                        log(">>>>>>> Se ha enviado el mensaje");
                         break;
                     }
                 }
@@ -66,48 +65,52 @@ function clickHandler(event) {
     let tipo = event.srcElement.localName;
     var path = "";
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
-    if (tipo == 'a' || tipo == 'button' || tipo == 'select' || tipo == 'submit' || tipo == 'reset') {
-        // con esto recogemos todo el path del evento y lo guardamos en un string
-        for (var i = 0; i < event.path.length; i++) {
-            path = path + "/" + event.path[i].nodeName;
+    if (tipo == 'td' || tipo == 'a' || tipo == 'button' || tipo == 'select' || tipo == 'submit' || tipo == 'reset') {
+        // con esto recogemos todo el path del evento y lo guardamos en un string(lo ponemos a lenght -2 para que tome desde html)
+        for (var i = 0; i < event.path.length - 2; i++) {
+            path = "/" + event.path[i].nodeName + path;
         }
-        // con esto creamos el array del path
-        var arrayPath = path.split("/");
-        
+        // Con este for recorremos el tr para guardar los td que puedan estar dentro.
+        // for (var i = 0; i < event.path[1].cells.length; i++) {
+        //    var pathCells = pathCells + "<td>" + event.path[1].cells[i].innerText + "</td>";
+        // }
         // Volcamos todos los datos a nuestro objeto para enviarlo
-        var miobjeto = new DatosEvento(event.srcElement.id,
-                                    event.srcElement.name,
-                                    event.srcElement.localName,
-                                    event.type,
-                                    null,
-                                    event.srcElement.textContent,
-                                    arrayPath);
+        var miobjeto = new DatosEvento(
+                            event.srcElement.id, 
+                            event.srcElement.name, 
+                            event.srcElement.localName, 
+                            event.type, 
+                            event.srcElement.value, 
+                            event.srcElement.textContent, 
+                            null, 
+                            path.toLowerCase()
+                        );
         mandar = true;
     }
     //Solo si la varible "mandar" es igual a true, es decir a dado en un elemento valido
     // se envia la informacion
     if (mandar) {
         chrome.runtime.sendMessage(miobjeto);
-        log(">>>>>>> Se ha enviado el mensaje");
     }
 };
 
 //Es la funcion que se encarga de recoger el evento del change.
 function updateValue(e) {
     var path = "";
-    for (var i = 0; i < e.path.length; i++) {
-        path = path + "/" + e.path[i].nodeName;
+    for (var i = 0; i < e.path.length - 2; i++) {
+        path = "/" + event.path[i].nodeName + path;
     }
-     var arrayPath = path.split("/");
-    var datos = new DatosEvento(e.srcElement.id,
-                                e.srcElement.name,
-                                e.srcElement.localName,
-                                e.type,
-                                e.srcElement.value,
-                                e.srcElement.textContent,
-                                path);
+    var datos = new DatosEvento(
+                    e.srcElement.id, 
+                    e.srcElement.name, 
+                    e.srcElement.localName, 
+                    e.type, 
+                    e.srcElement.value, 
+                    e.srcElement.textContent, 
+                    e.srcElement.parentNode.localName, 
+                    null, 
+                    path.toLowerCase());
     chrome.runtime.sendMessage(datos);
-    log(">>>>>>> Se ha enviado el mensaje");
 }
 
 function log(mensaje){

@@ -35,7 +35,8 @@ function empezando(){
 		mensaje = {
 			url: tabs[0].url
 		}
-		secuencia.push(mensaje);
+        secuencia.push(mensaje);
+        console.log(mensaje);
 		log("Nº de secuencia >>>>>> " + secuencia.length);
 	});
 
@@ -74,7 +75,8 @@ const oyente = function listener(request, sender, sendResponse) {
         path: request.path
     }
     //Guardamos los objetos segun van llegando
-	secuencia.push(mensaje);
+    secuencia.push(mensaje);
+    console.log(mensaje);
     log("Nº de secuencia >>>>>> " + secuencia.length);
 }
 
@@ -106,18 +108,24 @@ function log(mensaje){
 
 // Funcion que se utiliza para guardar la informacion en un archivo
 function save() {
-    var htmlContent= "";
+    var htmlContent = "";
     for (i in secuencia) {
-		if (i == 0){
-			htmlContent = ["/** " + secuencia[i].url + "\n"];
-		}else{
-			htmlContent = [htmlContent + secuencia[i].id + "-" + secuencia[i].name + "-" +
-				secuencia[i].elementType + "-" + secuencia[i].typeEvent + "-" + secuencia[i].value +" \n"];
-		}
+        if (i == 0) {
+            htmlContent = ["/** " + secuencia[i].url + "\n"];
+        } else {
+            htmlContent = [htmlContent + 
+                "ID: " + secuencia[i].id + 
+                " - NAME: " + secuencia[i].name + 
+                " - ELEMENT_TYPE: " + secuencia[i].elementType + 
+                " - TYPE_EVENT: " + secuencia[i].typeEvent + 
+                " - VALUE: " + secuencia[i].value + 
+                "\nPATH: " + secuencia[i].path + 
+                "\n"
+            ];
+        }
     }
-    htmlContent = htmlContent + " **/\n";
-	
-	return htmlContent;
+    htmlContent = htmlContent + "**/\n";
+    return htmlContent;
 }
 
 // Funcion que guarda toda la informacion del array de la secuencia y llama a las funciones Java
@@ -141,6 +149,11 @@ function diferenciarEventos(secuencia) {
         if (secuencia[i].typeEvent == "click") {
             if (secuencia[i].elementType == "a") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
+                // Con este if se puede extraer todos los td que puedan estar dentro de un tr
+                // } else if (secuencia[i].elementType == "td") {
+                //     javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[" + secuencia[i].innerText + "]\"));" + "\n"];
+            } else if (secuencia[i].elementType == "td") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else {
                 if (secuencia[i] && secuencia[i].id != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
@@ -149,18 +162,18 @@ function diferenciarEventos(secuencia) {
                 } else if (secuencia[i] && secuencia[i].linkText != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
                 } else if (secuencia[i] && secuencia[i].path != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
                 } else {
                     javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
                 }
             }
         } else if (secuencia[i].typeEvent == "change") {
             if (secuencia[i] && secuencia[i].id != "") {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\")" + ", \"" + secuencia[i].value +  "\");" + "\n"];
+                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
             } else if (secuencia[i] && secuencia[i].name != "") {
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + "\"" + secuencia[i].name + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
             } else if (secuencia[i] && secuencia[i].path != "") {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.xpath(" + "\"" + secuencia[i].path + "\")" + ", \"" + secuencia[i].value  + "\");" + "\n"];
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else {
                 javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
             }
