@@ -1,3 +1,7 @@
+
+// Variable para motrar mensajes por la consola del navegador
+var debug = true;
+
 // Constructor del objeto que luego queremos enviar al background
 function DatosEvento(id, name, elementType, typeEvent, value, linkText, path) {
     this.id = id;
@@ -8,6 +12,8 @@ function DatosEvento(id, name, elementType, typeEvent, value, linkText, path) {
     this.linkText = linkText;
     this.path = path;
 }
+
+log(">>>>>>> En funcionamiento");
 
 // window.addEventListener("load", onLoadHandler);
 // function onLoadHandler(e) {
@@ -43,6 +49,7 @@ function keypressed(ev) {
                                         null
                                         );
                         chrome.runtime.sendMessage(miobjeto);
+                        log(">>>>>>> Se ha enviado el mensaje");
                         break;
                     }
                 }
@@ -82,6 +89,7 @@ function clickHandler(event) {
     // se envia la informacion
     if (mandar) {
         chrome.runtime.sendMessage(miobjeto);
+        log(">>>>>>> Se ha enviado el mensaje");
     }
 };
 
@@ -100,6 +108,13 @@ function updateValue(e) {
                                 e.srcElement.textContent,
                                 path);
     chrome.runtime.sendMessage(datos);
+    log(">>>>>>> Se ha enviado el mensaje");
+}
+
+function log(mensaje){
+	if(debug){
+		console.log(mensaje);
+	}
 }
 
 

@@ -1,7 +1,7 @@
 //Icono de activado
-var iconAct = "img/activado1.png";
+var iconAct = "img/activado.png";
 //Icono desactivado
-var iconDes = "img/desactivado1.png";
+var iconDes = "img/desactivado.png";
 //Array donde se guardaran los eventos que vayan grabando
 var secuencia = [];
 // Inicializacion del objeto que se va guardando
@@ -35,32 +35,12 @@ function empezando(){
 		mensaje = {
 			url: tabs[0].url
 		}
-		console.log(mensaje);
 		secuencia.push(mensaje);
 		log("Nº de secuencia >>>>>> " + secuencia.length);
 	});
 
 	//Recibe los mensaje del content con el objeto del evento
 	chrome.runtime.onMessage.addListener(oyente);
-
-}
-
-// Funcion que se utiliza para guardar la informacion en un archivo
-function save() {
-    var htmlContent= "";
-    for (i in secuencia) {
-		if (i == 0){
-			htmlContent = [secuencia[i].url + "\n"];
-		}else{
-			htmlContent = [htmlContent + secuencia[i].id + " - " + secuencia[i].name + " - " +
-				secuencia[i].elementType + " - " + secuencia[i].typeEvent + " - " + secuencia[i].value +"\n"];
-		}
-    }
-    var bl = new Blob(htmlContent, {
-        type: "text/txt" 
-    });
-	
-	return URL.createObjectURL(bl);
 }
 
 // Funcion que se llama cuando se pulsa por segunda vez el icono para terminar de grabar
@@ -93,7 +73,6 @@ const oyente = function listener(request, sender, sendResponse) {
         linkText: request.linkText,
         path: request.path
     }
-    console.log(mensaje);
     //Guardamos los objetos segun van llegando
 	secuencia.push(mensaje);
     log("Nº de secuencia >>>>>> " + secuencia.length);
@@ -125,9 +104,25 @@ function log(mensaje){
 	}
 }
 
+// Funcion que se utiliza para guardar la informacion en un archivo
+function save() {
+    var htmlContent= "";
+    for (i in secuencia) {
+		if (i == 0){
+			htmlContent = ["/** " + secuencia[i].url + "\n"];
+		}else{
+			htmlContent = [htmlContent + secuencia[i].id + "-" + secuencia[i].name + "-" +
+				secuencia[i].elementType + "-" + secuencia[i].typeEvent + "-" + secuencia[i].value +" \n"];
+		}
+    }
+    htmlContent = htmlContent + " **/\n";
+	
+	return htmlContent;
+}
+
 // Funcion que guarda toda la informacion del array de la secuencia y llama a las funciones Java
 function saveFunctionJava() {
-    var htmlContent = "";
+    var htmlContent = save();
     htmlContent = [htmlContent + diferenciarEventos(secuencia)];
     var bl = new Blob(htmlContent, {
         type: "text/txt"
