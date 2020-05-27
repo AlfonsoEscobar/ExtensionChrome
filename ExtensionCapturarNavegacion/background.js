@@ -139,7 +139,7 @@ function diferenciarEventos(secuencia) {
                 } else if (secuencia[i] && secuencia[i].linkText != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
                 } else if (secuencia[i] && secuencia[i].path != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\n"];
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
                 } else {
                     javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
                 }

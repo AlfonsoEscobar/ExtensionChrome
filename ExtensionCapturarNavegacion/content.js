@@ -11,11 +11,12 @@ function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerTex
 }
 document.addEventListener("click", clickHandler);
 document.addEventListener("change", updateValue);
-document.addEventListener("keypress", keypressed);
+
 //Es la funcion que se encarga de recoger el evento del click
 function clickHandler(event) {
     //Inicializa la variable "mandar" a falso para que solo cuando es un click valido se mande la informacion
     // al background
+    console.log(event);
     let mandar = false;
     let tipo = event.srcElement.localName;
     var path = "";
@@ -66,21 +67,6 @@ function updateValue(e) {
     chrome.runtime.sendMessage(datos);
 }
 
-function keypressed(ev) {
-    var codigo = ev.which || ev.keyCode;
-    if (codigo === 13) {
-        for (var i = 0; i < ev.path; i++) {
-            if (ev.path[i] == "form") {
-                for (let x = 0; x < ev.path[i]; x++) {
-                    if (ev.path[i][x].type == "submit") {
-                        var miobjeto = new DatosEvento(ev[i][x].id, ev[i][x].name, ev[i][x].localName, "click", null, ev[i][x].textContent, null);
-                        chrome.runtime.sendMessage(miobjeto);
-                    }
-                }
-            }
-        }
-    }
-}
 // haciendo pruebas con el frame
 // window.addEventListener("load", onLoadHandler);
 // function onLoadHandler(e) {
