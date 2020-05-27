@@ -33,7 +33,6 @@ log(">>>>>>> En funcionamiento");
 function keypressed(ev) {
     var codigo = ev.which || ev.keyCode;
     console.log(ev);
-    debugger;
     if(codigo === 13){
         for (let i = 0; i < ev.path; i++){
             if(ev.path[i] == "form"){
