@@ -98,25 +98,18 @@ function save() {
     var htmlContent = "";
     for (i in secuencia) {
         if (i == 0) {
-            htmlContent = [secuencia[i].url + "\n"];
+            htmlContent = ["/** " + secuencia[i].url + "\n"];
         } else {
-            htmlContent = [htmlContent + secuencia[i].id + " - " + secuencia[i].name + " - " + secuencia[i].elementType + " - " + secuencia[i].typeEvent + " - " + secuencia[i].value + " - " + secuencia[i].path + "\n"];
+            htmlContent = [htmlContent + "ID: " + secuencia[i].id + " - NAME: " + secuencia[i].name + " - ELEMENT_TYPE: " + secuencia[i].elementType + " - TYPE_EVENT: " + secuencia[i].typeEvent + " - VALUE: " + secuencia[i].value + "\nPATH: " + secuencia[i].path + "\n"];
         }
     }
-    var bl = new Blob(htmlContent, {
-        type: "text/txt"
-    });
-    return URL.createObjectURL(bl);
+    htmlContent = htmlContent + " **/\n";
+    return htmlContent;
 }
 // Funcion que se utiliza para guardar la informacion en un archivo con metodos Java
 function saveFunctionJava() {
-    var htmlContent = "";
-    for (i in secuencia) {
-        if (secuencia[i].typeEvent == "click" || secuencia[i].typeEvent == "change") {
-            htmlContent = [htmlContent + secuencia[i].id + " - " + secuencia[i].name + " - " + secuencia[i].elementType + " - " + secuencia[i].typeEvent + " - " + secuencia[i].value + " - " + secuencia[i].path + "\n"];
-        }
-    }
-    htmlContent = ["/**\n"+ htmlContent +"**/\n"+ diferenciarEventos(secuencia)];
+    var htmlContent = save();
+    htmlContent = [htmlContent + diferenciarEventos(secuencia)];
     var bl = new Blob(htmlContent, {
         type: "text/txt"
     });
