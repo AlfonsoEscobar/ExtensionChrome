@@ -72,6 +72,7 @@ const oyente = function listener(request, sender, sendResponse) {
         typeEvent: request.typeEvent,
         value: request.value,
         linkText: request.linkText,
+        innerText: request.innerText,
         path: request.path
     }
     //Guardamos los objetos segun van llegando
@@ -114,14 +115,13 @@ function save() {
             htmlContent = ["/** " + secuencia[i].url + "\n"];
         } else {
             htmlContent = [htmlContent + 
-                "ID: " + secuencia[i].id + 
-                " - NAME: " + secuencia[i].name + 
-                " - ELEMENT_TYPE: " + secuencia[i].elementType + 
-                " - TYPE_EVENT: " + secuencia[i].typeEvent + 
-                " - VALUE: " + secuencia[i].value + 
-                "\nPATH: " + secuencia[i].path + 
-                "\n"
-            ];
+            "ID: " + secuencia[i].id + 
+            " - NAME: " + secuencia[i].name + 
+            " - ELEMENT_TYPE: " + secuencia[i].elementType + 
+            " - TYPE_EVENT: " + secuencia[i].typeEvent + 
+            " - VALUE: " + secuencia[i].value + 
+            " - LINKTEXT: " + secuencia[i].linkText + 
+            "\nPATH: " + secuencia[i].path + "\n"];
         }
     }
     htmlContent = htmlContent + "**/\n";
@@ -162,7 +162,7 @@ function diferenciarEventos(secuencia) {
                 } else if (secuencia[i] && secuencia[i].linkText != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
                 } else if (secuencia[i] && secuencia[i].path != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
                 } else {
                     javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
                 }

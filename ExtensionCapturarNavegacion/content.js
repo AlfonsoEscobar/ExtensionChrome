@@ -3,33 +3,34 @@
 var debug = true;
 
 // Constructor del objeto que luego queremos enviar al background
-function DatosEvento(id, name, elementType, typeEvent, value, linkText, path) {
+function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerText, path) {
     this.id = id;
     this.name = name;
     this.elementType = elementType;
     this.typeEvent = typeEvent;
     this.value = value;
     this.linkText = linkText;
+    this.innerText = innerText;
     this.path = path;
 }
 
 log(">>>>>>> En funcionamiento");
 
-// window.addEventListener("load", onLoadHandler);
-// function onLoadHandler(e) {
-//     console.log("JMP->En onLoadHandler...");
-//     for (let idx = 0; idx < window.frames.length; idx++) {
-//         console.log("JMP->Asociando listener a frame:" + idx);
-//         window.frames[idx].addEventListener("click", clickHandler);
-// 		window.frames[idx].addEventListener("change", updateValue);
-//     }
+window.addEventListener("load", onLoadHandler);
+function onLoadHandler(e) {
+    console.log("JMP->En onLoadHandler...");
+    for (let idx = 0; idx < window.frames.length; idx++) {
+        console.log("JMP->Asociando listener a frame:" + idx);
+        window.frames[idx].addEventListener("click", clickHandler);
+		window.frames[idx].addEventListener("change", updateValue);
+    }
    
-//     console.log("JMP->Asociando listener a document");
-//     document.addEventListener("click", clickHandler);
-// 	document.addEventListener("change", updateValue);
-// }
+    console.log("JMP->Asociando listener a document");
+    document.addEventListener("click", clickHandler);
+	document.addEventListener("change", updateValue);
+}
 
-//Es la funcion que se encarga de recoger el evento de la pulsacion del ENTER
+//Es la funcion que se encarga de recoger el evento de la pulsacion del ENTER solo funciona en los formularios
 function keypressed(ev) {
     var codigo = ev.which || ev.keyCode;
     if(codigo === 13){
@@ -64,7 +65,7 @@ function clickHandler(event) {
     let tipo = event.srcElement.localName;
     var path = "";
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
-    if (tipo == 'td' || tipo == 'a' || tipo == 'button' || tipo == 'select' || tipo == 'submit' || tipo == 'reset') {
+    if (tipo == 'img' || tipo == 'td' || tipo == 'a' || tipo == 'button' || tipo == 'select' || tipo == 'submit' || tipo == 'reset') {
         // con esto recogemos todo el path del evento y lo guardamos en un string(lo ponemos a lenght -2 para que tome desde html)
         for (var i = 0; i < event.path.length - 2; i++) {
             path = "/" + event.path[i].nodeName + path;
@@ -106,7 +107,6 @@ function updateValue(e) {
                     e.type, 
                     e.srcElement.value, 
                     e.srcElement.textContent, 
-                    e.srcElement.parentNode.localName, 
                     null, 
                     path.toLowerCase());
     chrome.runtime.sendMessage(datos);
