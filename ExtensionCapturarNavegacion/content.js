@@ -21,7 +21,7 @@ function clickHandler(event) {
     let tipo = event.srcElement.localName;
     var path = "";
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
-    if (tipo == 'img' ||tipo == 'td' || tipo == 'a' || tipo == 'button' || tipo == 'select' || tipo == 'submit' || tipo == 'reset') {
+    if (tipo == 'img' ||tipo == 'td' || tipo == 'a' || tipo == 'button' || tipo == 'submit' || tipo == 'reset') {
         // con esto recogemos todo el path del evento y lo guardamos en un string(lo ponemos a lenght -2 para que tome desde html)
         for (var i = 0; i < event.path.length - 2; i++) {
             path = "/" + event.path[i].nodeName + path;
@@ -52,6 +52,7 @@ function clickHandler(event) {
 
 function updateValue(e) {
     var path = "";
+
     for (var i = 0; i < e.path.length - 2; i++) {
         path = "/" + event.path[i].nodeName + path;
     }
