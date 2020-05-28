@@ -29,7 +29,6 @@ function empezando() {
         'active': true,
         'lastFocusedWindow': true
     }, function(tabs) {
-        // console.log(tabs);
         mensaje = {
             url: tabs[0].url
         }
@@ -108,7 +107,7 @@ function save() {
             " - TYPE_EVENT: " + secuencia[i].typeEvent + 
             " - VALUE: " + secuencia[i].value + 
             " - LINKTEXT: " + secuencia[i].linkText + 
-            "\nPATH: " + secuencia[i].path + "\n"];
+            "\nPATH: " + secuencia[i].path.toLowerCase() + "\n"];
         }
     }
     htmlContent = htmlContent + "**/\n";
@@ -138,7 +137,9 @@ function diferenciarEventos(secuencia) {
                 //     javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[" + secuencia[i].innerText + "]\"));" + "\n"];
             } else if (secuencia[i].elementType == "td") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
-            } else {
+            } else if (secuencia[i].elementType == "select") {
+                javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].id + "\")," + "\"" + secuencia[i].linkText + "\");"+ "\n"];
+             } else {
                 if (secuencia[i] && secuencia[i].id != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
                 } else if (secuencia[i] && secuencia[i].name != "") {
