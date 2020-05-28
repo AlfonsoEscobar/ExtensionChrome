@@ -168,7 +168,9 @@ function diferenciarEventos(secuencia) {
                 }
             }
         } else if (secuencia[i].typeEvent == "change") {
-            if (secuencia[i] && secuencia[i].id != "") {
+            if (secuencia[i].elementType == "select") {
+                javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].id + "\")," + "\"" + secuencia[i].value + "\"));"+ "\n"];
+            }else if (secuencia[i] && secuencia[i].id != "") {
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
             } else if (secuencia[i] && secuencia[i].name != "") {
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + "\"" + secuencia[i].name + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
