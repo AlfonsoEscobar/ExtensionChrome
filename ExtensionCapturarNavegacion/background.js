@@ -101,7 +101,14 @@ function save() {
         if (i == 0) {
             htmlContent = ["/** " + secuencia[i].url + "\n"];
         } else {
-            htmlContent = [htmlContent + "ID: " + secuencia[i].id + " - NAME: " + secuencia[i].name + " - ELEMENT_TYPE: " + secuencia[i].elementType + " - TYPE_EVENT: " + secuencia[i].typeEvent + " - VALUE: " + secuencia[i].value + "\nPATH: " + secuencia[i].path + "\n"];
+            htmlContent = [htmlContent + 
+            "ID: " + secuencia[i].id + 
+            " - NAME: " + secuencia[i].name + 
+            " - ELEMENT_TYPE: " + secuencia[i].elementType + 
+            " - TYPE_EVENT: " + secuencia[i].typeEvent + 
+            " - VALUE: " + secuencia[i].value + 
+            " - LINKTEXT: " + secuencia[i].linkText + 
+            "\nPATH: " + secuencia[i].path + "\n"];
         }
     }
     htmlContent = htmlContent + "**/\n";

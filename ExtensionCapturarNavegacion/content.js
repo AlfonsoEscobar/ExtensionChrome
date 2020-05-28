@@ -66,23 +66,3 @@ function updateValue(e) {
         path.toLowerCase());
     chrome.runtime.sendMessage(datos);
 }
-
-// haciendo pruebas con el frame
-// window.addEventListener("load", onLoadHandler);
-// function onLoadHandler(e) {
-//     let currentWindow = window;
-//     let currentParentWindow;
-//     let frameLocation = ""
-//     while (currentWindow !== window.top) {
-//         currentParentWindow = currentWindow.parent;
-//         for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
-//             if (currentParentWindow.frames[idx] === currentWindow) {
-//                 console.log("JMP->Asociando listener a frame:" + idx);
-//                 window.frames[idx].addEventListener("click", clickHandler);
-//                 window.frames[idx].addEventListener("change", updateValue);
-//             }
-//     }
-//     console.log("JMP->Asociando listener a document");
-//     document.addEventListener("click", clickHandler);
-//     document.addEventListener("change", updateValue);
-// }
