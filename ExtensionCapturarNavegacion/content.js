@@ -1,5 +1,5 @@
 // Constructor del objeto que luego queremos enviar al background
-function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerText, path) {
+function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerText, path, valueSelect) {
     this.id = id;
     this.name = name;
     this.elementType = elementType;
@@ -8,6 +8,7 @@ function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerTex
     this.linkText = linkText;
     this.innerText = innerText;
     this.path = path;
+    this.valueSelect = valueSelect;
 }
 document.addEventListener("click", clickHandler);
 document.addEventListener("change", updateValue);
@@ -26,6 +27,7 @@ function clickHandler(event) {
         for (var i = 0; i < event.path.length - 2; i++) {
             path = "/" + event.path[i].nodeName + path;
         }
+
         // Con este for recorremos el tr para guardar los td que puedan estar dentro.
         // for (var i = 0; i < event.path[1].cells.length; i++) {
         //    var pathCells = pathCells + "<td>" + event.path[1].cells[i].innerText + "</td>";
@@ -39,7 +41,8 @@ function clickHandler(event) {
             event.srcElement.value, 
             event.srcElement.textContent, 
             null, 
-            path.toLowerCase()
+            path.toLowerCase(),
+            null
             );
         mandar = true;
     }
@@ -51,11 +54,19 @@ function clickHandler(event) {
 };
 
 function updateValue(e) {
+    
     var path = "";
+    var valueSelect ="";
 
     for (var i = 0; i < e.path.length - 2; i++) {
         path = "/" + event.path[i].nodeName + path;
     }
+
+ if(e.srcElement.localName == "select"){
+    valueSelect =  e.srcElement.selectedOptions[0].innerText;
+ }else{
+    valueSelect = null;
+ }
     var datos = new DatosEvento(
         e.srcElement.id, 
         e.srcElement.name, 
@@ -64,6 +75,9 @@ function updateValue(e) {
         e.srcElement.value, 
         e.srcElement.textContent, 
         null, 
-        path.toLowerCase());
+        path.toLowerCase(),
+        valueSelect
+    );
+
     chrome.runtime.sendMessage(datos);
 }

@@ -64,7 +64,8 @@ const oyente = function listener(request, sender, sendResponse) {
         value: request.value,
         linkText: request.linkText,
         innerText: request.innerText,
-        path: request.path
+        path: request.path,
+        valueSelect:request.valueSelect
     }
     console.log(mensaje);
     //Guardamos los objetos segun van llegando
@@ -107,6 +108,7 @@ function save() {
             " - TYPE_EVENT: " + secuencia[i].typeEvent + 
             " - VALUE: " + secuencia[i].value + 
             " - LINKTEXT: " + secuencia[i].linkText + 
+            " - VALUESELECT: " + secuencia[i].valueSelect + 
             "\nPATH: " + secuencia[i].path.toLowerCase() + "\n"];
         }
     }
@@ -152,7 +154,7 @@ function diferenciarEventos(secuencia) {
             }
         } else if (secuencia[i].typeEvent == "change") {
             if (secuencia[i].elementType == "select") {
-                javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].id + "\")," + "\"" + secuencia[i].value + "\"));"+ "\n"];
+                javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].id + "\")," + "\"" + secuencia[i].valueSelect + "\"));"+ "\n"];
             }else if (secuencia[i] && secuencia[i].id != "") {
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
             } else if (secuencia[i] && secuencia[i].name != "") {
