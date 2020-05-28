@@ -32,7 +32,6 @@ log(">>>>>>> En funcionamiento");
 //Es la funcion que se encarga de recoger el evento de la pulsacion del ENTER
 function keypressed(ev) {
     var codigo = ev.which || ev.keyCode;
-    console.log(ev);
     if(codigo === 13){
         for (let i = 0; i < ev.path; i++){
             if(ev.path[i] == "form"){
