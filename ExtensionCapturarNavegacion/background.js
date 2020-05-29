@@ -153,9 +153,12 @@ function diferenciarEventos(secuencia) {
                 }
             }
         } else if (secuencia[i].typeEvent == "change") {
-            
             if (secuencia[i].elementType == "select") {
-                javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].id + "\")," + "\"" + secuencia[i].valueSelect + "\"));"+ "\n"];
+                if (secuencia[i].id != ""){
+                    javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].id + "\")," + "\"" + secuencia[i].valueSelect + "\"));"+ "\n"];
+                }else{
+                    javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].name + "\")," + "\"" + secuencia[i].valueSelect + "\"));"+ "\n"];
+                }
             } else if (secuencia[i] && secuencia[i].id != "") {
                 // por aqui pasarían los input que tuviesen ID
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];

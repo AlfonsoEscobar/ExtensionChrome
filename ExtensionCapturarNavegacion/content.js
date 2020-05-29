@@ -38,7 +38,8 @@ function clickHandler(event) {
             event.type, 
             event.srcElement.value, 
             event.srcElement.textContent, 
-            null, path.toLowerCase(), 
+            null,
+            path.toLowerCase(), 
             null
             );
         mandar = true;
@@ -67,7 +68,7 @@ function updateValue(e) {
     if (e.srcElement.type == "checkbox") {
         type = e.srcElement.type;
     } 
-    
+
     var datos = new DatosEvento(
         e.srcElement.id, 
         e.srcElement.name, 
@@ -77,7 +78,7 @@ function updateValue(e) {
         e.srcElement.textContent, 
         null, path.toLowerCase(), 
         valueSelect
-        );
+        )
 
     chrome.runtime.sendMessage(datos);
 }
