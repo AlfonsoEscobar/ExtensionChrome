@@ -153,9 +153,11 @@ function diferenciarEventos(secuencia) {
                 }
             }
         } else if (secuencia[i].typeEvent == "change") {
+            
             if (secuencia[i].elementType == "select") {
                 javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].id + "\")," + "\"" + secuencia[i].valueSelect + "\"));"+ "\n"];
-            }else if (secuencia[i] && secuencia[i].id != "") {
+            } else if (secuencia[i] && secuencia[i].id != "") {
+                // por aqui pasarían los input que tuviesen ID
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
             } else if (secuencia[i] && secuencia[i].name != "") {
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + "\"" + secuencia[i].name + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
@@ -164,6 +166,9 @@ function diferenciarEventos(secuencia) {
             } else {
                 javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
             }
+
+        }else if (secuencia[i].typeEvent == "checkbox") {
+             javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
         }
     }
     return javaFunciones;
