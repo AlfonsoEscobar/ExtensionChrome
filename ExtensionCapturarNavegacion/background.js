@@ -14,7 +14,6 @@ var debug = true;
 
 //Se pone en funcionamiento o se apaga solo cuando se le da click al icono
 chrome.browserAction.onClicked.addListener( function() {
-	
 	if(pulsado){
 		empezando();
 		pulsado = !pulsado;
@@ -26,11 +25,8 @@ chrome.browserAction.onClicked.addListener( function() {
 
 // Es la funcion que una vez se enciende la grabacion recibe los mensajes del content
 function empezando(){
-
 	log(">>>>>>>>>> En funcionamiento <<<<<<<<<<");
-
 	crearNotificacion("on", "Empezando a grabar", iconAct, "Empezando a grabar", 3000);
-
 	chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 		mensaje = {
 			url: tabs[0].url
@@ -39,7 +35,6 @@ function empezando(){
         console.log(mensaje);
 		log("Nº de secuencia >>>>>> " + secuencia.length);
 	});
-
 	//Recibe los mensaje del content con el objeto del evento
 	chrome.runtime.onMessage.addListener(oyente);
 }
@@ -47,19 +42,16 @@ function empezando(){
 // Funcion que se llama cuando se pulsa por segunda vez el icono para terminar de grabar
 // y abre la ventana de Guardado y vuelve a inicializar las variables
 function terminando(){
-
 	chrome.downloads.download({
 		url: saveFunctionJava(),
 		filename: "Test.txt",
 		saveAs: true
 	});
-
 	secuencia = [];
 	mensaje = {};
 	crearNotificacion("off", "Terminando de grabar", iconDes, "Terminando de grabar", 1500);
 	log(">>>>>>> Terminando <<<<<<")
 	chrome.runtime.onMessage.removeListener(oyente);
-
 }
 
 // Es la funcion que se le llama para recibir el mensaje y se vuelve a llamar cuando se termina para 
@@ -73,11 +65,12 @@ const oyente = function listener(request, sender, sendResponse) {
         value: request.value,
         linkText: request.linkText,
         innerText: request.innerText,
-        path: request.path
+        path: request.path,
+        valueSelect:request.valueSelect
     }
+    console.log(mensaje);
     //Guardamos los objetos segun van llegando
     secuencia.push(mensaje);
-    console.log(mensaje);
     log("Nº de secuencia >>>>>> " + secuencia.length);
 }
 
@@ -121,7 +114,8 @@ function save() {
             " - TYPE_EVENT: " + secuencia[i].typeEvent + 
             " - VALUE: " + secuencia[i].value + 
             " - LINKTEXT: " + secuencia[i].linkText + 
-            "\nPATH: " + secuencia[i].path + "\n"];
+            " - VALUESELECT: " + secuencia[i].valueSelect + 
+            "\nPATH: " + secuencia[i].path.toLowerCase() + "\n"];
         }
     }
     htmlContent = htmlContent + "**/\n";
@@ -168,9 +162,15 @@ function diferenciarEventos(secuencia) {
                 }
             }
         } else if (secuencia[i].typeEvent == "change") {
+            
             if (secuencia[i].elementType == "select") {
-                javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].id + "\")," + "\"" + secuencia[i].value + "\"));"+ "\n"];
-            }else if (secuencia[i] && secuencia[i].id != "") {
+                if (secuencia[i].id != ""){
+                    javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].id + "\")," + "\"" + secuencia[i].valueSelect + "\"));"+ "\n"];
+                }else{
+                    javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].name + "\")," + "\"" + secuencia[i].valueSelect + "\"));"+ "\n"];
+                }
+            } else if (secuencia[i] && secuencia[i].id != "") {
+                // por aqui pasarían los input que tuviesen ID
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
             } else if (secuencia[i] && secuencia[i].name != "") {
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + "\"" + secuencia[i].name + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
@@ -179,6 +179,9 @@ function diferenciarEventos(secuencia) {
             } else {
                 javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
             }
+
+        }else if (secuencia[i].typeEvent == "checkbox") {
+             javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
         }
     }
     return javaFunciones;
