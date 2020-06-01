@@ -140,7 +140,7 @@ function diferenciarEventos(secuencia) {
                 // } else if (secuencia[i].elementType == "td") {
                 //     javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[" + secuencia[i].innerText + "]\"));" + "\n"];
             } else if (secuencia[i].elementType == "img") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "['" + secuencia[i].altImg + "']\"));" + "\n"];
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.cssSelector(\"img[alt=\\"+"\"" + secuencia[i].altImg + "\\\"]), By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
             
             } else if (secuencia[i].elementType == "td") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
@@ -176,7 +176,17 @@ function diferenciarEventos(secuencia) {
             }
 
         }else if (secuencia[i].typeEvent == "checkbox") {
-             javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
+              if (secuencia[i] && secuencia[i].id != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
+                } else if (secuencia[i] && secuencia[i].name != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"));" + "\n"];
+                } else if (secuencia[i] && secuencia[i].linkText != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
+                } else if (secuencia[i] && secuencia[i].path != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
+                } else {
+                    javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
+                }
         }
     }
     return javaFunciones;

@@ -18,10 +18,10 @@ function clickHandler(event) {
     //Inicializa la variable "mandar" a falso para que solo cuando es un click valido se mande la informacion
     // al background
     console.log(event);
-    let mandar = false;
+    var mandar = false;
     var tipo = event.srcElement.localName;
-    let path = "";
-    let altImagen = "";
+    var path = "";
+    var altImagen = "";
    // Para poder separar los input de submit y reset y se comporten como un click.
      if (event.srcElement.type == "submit" || event.srcElement.type == "reset" ){
             tipo = event.srcElement.type;
