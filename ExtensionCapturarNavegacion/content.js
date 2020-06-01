@@ -1,5 +1,5 @@
 // Constructor del objeto que luego queremos enviar al background
-function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerText, path, valueSelect) {
+function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerText, path, valueSelect, altImg) {
     this.id = id;
     this.name = name;
     this.elementType = elementType;
@@ -9,6 +9,7 @@ function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerTex
     this.innerText = innerText;
     this.path = path;
     this.valueSelect = valueSelect;
+    this.altImg = altImg;
 }
 
 //Es la funcion que se encarga de recoger el evento del click
@@ -19,6 +20,12 @@ function clickHandler(event) {
     let mandar = false;
     let tipo = event.srcElement.localName;
     var path = "";
+
+    // Para poder separar los input de submit y reset y se comporten como un click.
+    if(event.srcElement.type == "submit" || event.srcElement.type == "reset" ){
+        tipo = event.srcElement.type;
+    }
+
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
     if (tipo == 'img' || tipo == 'td' || tipo == 'a' || tipo == 'button' || tipo == 'submit' || tipo == 'reset') {
         // con esto recogemos todo el path del evento y lo guardamos en un string(lo ponemos a lenght -2 para que tome desde html)
@@ -30,6 +37,12 @@ function clickHandler(event) {
         // for (var i = 0; i < event.path[1].cells.length; i++) {
         //    var pathCells = pathCells + "<td>" + event.path[1].cells[i].innerText + "</td>";
         // }
+
+        // Captamos alt para información de la imagen pulsada
+        if (event.srcElement.localName == "img") {
+            altImagen = event.srcElement.alt;
+        }
+
         // Volcamos todos los datos a nuestro objeto para enviarlo
         var miobjeto = new DatosEvento(
             event.srcElement.id, 
@@ -55,6 +68,8 @@ function updateValue(e) {
     var path = "";
     var valueSelect = "";
     var type = e.type;
+
+    console.log(e);
 
     for (var i = 0; i < e.path.length - 2; i++) {
         path = "/" + event.path[i].nodeName + path;

@@ -66,7 +66,8 @@ const oyente = function listener(request, sender, sendResponse) {
         linkText: request.linkText,
         innerText: request.innerText,
         path: request.path,
-        valueSelect:request.valueSelect
+        valueSelect:request.valueSelect,
+        altImg: request.altImg
     }
     console.log(mensaje);
     //Guardamos los objetos segun van llegando
@@ -115,6 +116,7 @@ function save() {
             " - VALUE: " + secuencia[i].value + 
             " - LINKTEXT: " + secuencia[i].linkText + 
             " - VALUESELECT: " + secuencia[i].valueSelect + 
+            " - ALTIMG: " + secuencia[i].altImg + 
             "\nPATH: " + secuencia[i].path.toLowerCase() + "\n"];
         }
     }
@@ -146,6 +148,10 @@ function diferenciarEventos(secuencia) {
                 // Con este if se puede extraer todos los td que puedan estar dentro de un tr
                 // } else if (secuencia[i].elementType == "td") {
                 //     javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[" + secuencia[i].innerText + "]\"));" + "\n"];
+                // }
+            } else if (secuencia[i].elementType == "img") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.cssSelector(\"img[alt=\\"+"\"" + secuencia[i].altImg + "\\\"]), By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
+            
             } else if (secuencia[i].elementType == "td") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else {
@@ -162,7 +168,6 @@ function diferenciarEventos(secuencia) {
                 }
             }
         } else if (secuencia[i].typeEvent == "change") {
-            
             if (secuencia[i].elementType == "select") {
                 if (secuencia[i].id != ""){
                     javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].id + "\")," + "\"" + secuencia[i].valueSelect + "\"));"+ "\n"];
@@ -181,7 +186,17 @@ function diferenciarEventos(secuencia) {
             }
 
         }else if (secuencia[i].typeEvent == "checkbox") {
-             javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
+              if (secuencia[i] && secuencia[i].id != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
+                } else if (secuencia[i] && secuencia[i].name != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"));" + "\n"];
+                } else if (secuencia[i] && secuencia[i].linkText != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
+                } else if (secuencia[i] && secuencia[i].path != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
+                } else {
+                    javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
+                }
         }
     }
     return javaFunciones;
