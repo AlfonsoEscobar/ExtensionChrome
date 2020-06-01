@@ -20,14 +20,14 @@ function clickHandler(event) {
     let mandar = false;
     let tipo = event.srcElement.localName;
     var path = "";
-
+    let altImagen = "";
     // Para poder separar los input de submit y reset y se comporten como un click.
     if(event.srcElement.type == "submit" || event.srcElement.type == "reset" ){
         tipo = event.srcElement.type;
     }
 
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
-    if (tipo == 'img' || tipo == 'td' || tipo == 'a' || tipo == 'button' || tipo == 'submit' || tipo == 'reset') {
+    if (tipo == 'span' || tipo == 'img' || tipo == 'td' || tipo == 'a' || tipo == 'button' || tipo == 'submit' || tipo == 'reset') {
         // con esto recogemos todo el path del evento y lo guardamos en un string(lo ponemos a lenght -2 para que tome desde html)
         for (var i = 0; i < event.path.length - 2; i++) {
             path = "/" + event.path[i].nodeName + path;
@@ -48,12 +48,13 @@ function clickHandler(event) {
             event.srcElement.id, 
             event.srcElement.name, 
             event.srcElement.localName, 
-            event.type, 
+            tipo, 
             event.srcElement.value, 
             event.srcElement.textContent, 
             null, 
             path.toLowerCase(),
-            null
+            null,
+            altImagen
             );
         mandar = true;
     }
@@ -68,8 +69,6 @@ function updateValue(e) {
     var path = "";
     var valueSelect = "";
     var type = e.type;
-
-    console.log(e);
 
     for (var i = 0; i < e.path.length - 2; i++) {
         path = "/" + event.path[i].nodeName + path;
