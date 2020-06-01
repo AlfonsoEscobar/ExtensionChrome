@@ -65,7 +65,8 @@ const oyente = function listener(request, sender, sendResponse) {
         linkText: request.linkText,
         innerText: request.innerText,
         path: request.path,
-        valueSelect:request.valueSelect
+        valueSelect:request.valueSelect,
+        altImg: request.altImg
     }
     console.log(mensaje);
     //Guardamos los objetos segun van llegando
@@ -109,6 +110,7 @@ function save() {
             " - VALUE: " + secuencia[i].value + 
             " - LINKTEXT: " + secuencia[i].linkText + 
             " - VALUESELECT: " + secuencia[i].valueSelect + 
+            " - ALTIMG: " + secuencia[i].altImg + 
             "\nPATH: " + secuencia[i].path.toLowerCase() + "\n"];
         }
     }
@@ -137,6 +139,9 @@ function diferenciarEventos(secuencia) {
                 // Con este if se puede extraer todos los td que puedan estar dentro de un tr
                 // } else if (secuencia[i].elementType == "td") {
                 //     javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[" + secuencia[i].innerText + "]\"));" + "\n"];
+            } else if (secuencia[i].elementType == "img") {
+                javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "['" + secuencia[i].altImg + "']\"));" + "\n"];
+            
             } else if (secuencia[i].elementType == "td") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else {
