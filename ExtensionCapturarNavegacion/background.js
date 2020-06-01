@@ -145,13 +145,13 @@ function diferenciarEventos(secuencia) {
             } else if (secuencia[i].elementType == "td") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else {
-                if (secuencia[i] && secuencia[i].id != "") {
+                if (secuencia[i].id != undefined && secuencia[i].id != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
-                } else if (secuencia[i] && secuencia[i].name != "") {
+                } else if (secuencia[i].name != undefined && secuencia[i].name != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"));" + "\n"];
-                } else if (secuencia[i] && secuencia[i].linkText != "") {
+                } else if (secuencia[i].linkText != undefined && secuencia[i].linkText != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
-                } else if (secuencia[i] && secuencia[i].path != "") {
+                } else if (secuencia[i].path != undefined && secuencia[i].path != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
                 } else {
                     javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
@@ -164,25 +164,25 @@ function diferenciarEventos(secuencia) {
                 }else{
                     javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].name + "\")," + "\"" + secuencia[i].valueSelect + "\"));"+ "\n"];
                 }
-            } else if (secuencia[i] && secuencia[i].id != "") {
+            } else if (secuencia[i].id != undefined && secuencia[i].id != "") {
                 // por aqui pasarían los input que tuviesen ID
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
-            } else if (secuencia[i] && secuencia[i].name != "") {
+            } else if (secuencia[i].name != undefined && secuencia[i].name != "") {
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + "\"" + secuencia[i].name + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
-            } else if (secuencia[i] && secuencia[i].path != "") {
+            } else if (secuencia[i].path != undefined && secuencia[i].path != "") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else {
                 javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
             }
 
         }else if (secuencia[i].typeEvent == "checkbox") {
-              if (secuencia[i] && secuencia[i].id != "") {
+              if (secuencia[i].id != undefined && secuencia[i].id != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
-                } else if (secuencia[i] && secuencia[i].name != "") {
+                } else if (secuencia[i].name != undefined && secuencia[i].name != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"));" + "\n"];
-                } else if (secuencia[i] && secuencia[i].linkText != "") {
+                } else if (secuencia[i].linkText != undefined && secuencia[i].linkText != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
-                } else if (secuencia[i] && secuencia[i].path != "") {
+                } else if (secuencia[i].path != undefined && secuencia[i].path != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
                 } else {
                     javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
