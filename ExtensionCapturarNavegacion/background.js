@@ -120,7 +120,10 @@ function save() {
 // Funcion que se utiliza para guardar la informacion en un archivo con metodos Java
 function saveFunctionJava() {
     var htmlContent = save();
-    htmlContent = [htmlContent + diferenciarEventos(secuencia)];
+    htmlContent = ["@Test" + "\n" 
+    + "public void test" + Date.now() + "() throws Exception {"+ "\n" 
+    + htmlContent + diferenciarEventos(secuencia) + "}"];  
+    
     var bl = new Blob(htmlContent, {
         type: "text/txt"
     });
