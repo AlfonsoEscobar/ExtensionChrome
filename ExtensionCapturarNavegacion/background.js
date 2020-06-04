@@ -13,6 +13,8 @@ var pulsado = true;
 var debug = true;
 // Variable para comparar los cambios de frame.
 var frameViejo = null;
+
+var javaFunciones = "";
 //Se pone en funcionamiento o se apaga solo cuando se le da click al icono
 chrome.browserAction.onClicked.addListener(function() {
     if (pulsado) {
@@ -143,9 +145,42 @@ function saveFunctionJava() {
     });
     return URL.createObjectURL(bl);
 }
+function waitElementAndClick(objeto){
+    if (objeto.id != undefined && objeto.id != "") {
+        javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + objeto.id + "\"));" + "\n"];
+    } else if (objeto.name != undefined && objeto.name != "") {
+        javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + objeto.name + "\"));" + "\n"];
+    } else if (objeto.linkText != undefined && objeto.linkText != "") {
+        javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + objeto.linkText + "\"));" + "\n"];
+    } else if (objeto.path != undefined && objeto.path != "") {
+        javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + objeto.path + "\"));" + "\n"];
+    } else {
+        javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
+    }
+}
+
+function waitElementAndSendKeys(objeto){
+    if (objeto.id != undefined && objeto.id != ""){
+        javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + objeto.id + "\")" + ", \"" + objeto.value + "\");" + "\n"];
+    } else if (objeto.name != undefined && objeto.name != "") {
+        javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + "\"" + objeto.name + "\")" + ", \"" + objeto.value + "\");" + "\n"];
+    } else if (objeto.path != undefined && objeto.path != "") {
+        javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + objeto.path + "[contains(text(),'" + objeto.linkText + "')]\"));" + "\n"];
+    } else {
+        javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
+    }
+}
+
+function waitElementAndSelect(objeto){
+    if (objeto.id != undefined && objeto.id != ""){
+        javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + objeto.id + "\")," + "\"" + objeto.valueSelect + "\"));"+ "\n"];
+    }else{
+        javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + objeto.name + "\")," + "\"" + objeto.valueSelect + "\"));"+ "\n"];
+    }
+}
 
 function diferenciarEventos(secuencia) {
-    var javaFunciones = "";
+    let objeto;
     if (secuencia[0].url != "") {
         javaFunciones = [javaFunciones + "driver.get(" + "\"" + secuencia[0].url + "\"" + ");" + "\n"];
     }
@@ -161,7 +196,6 @@ function diferenciarEventos(secuencia) {
                 //     javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[" + secuencia[i].innerText + "]\"));" + "\n"];
             } else if (secuencia[i].elementType == "img") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.cssSelector(\"img[alt=\\"+"\"" + secuencia[i].altImg + "\\\"]), By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
-            
             } else if (secuencia[i].elementType == "td") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else if (secuencia[i].srcType == "submit") {
@@ -172,59 +206,24 @@ function diferenciarEventos(secuencia) {
                 }
                 
             } else {
-                if (secuencia[i].id != undefined && secuencia[i].id != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
-                } else if (secuencia[i].name != undefined && secuencia[i].name != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"));" + "\n"];
-                } else if (secuencia[i].linkText != undefined && secuencia[i].linkText != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
-                } else if (secuencia[i].path != undefined && secuencia[i].path != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
-                } else {
-                    javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
-                }
+                objeto = secuencia[i];
+                waitElementAndClick(objeto);
             }
         } else if (secuencia[i].typeEvent == "change") {
             if (secuencia[i].elementType == "select") {
-                if (secuencia[i].id != ""){
-                    javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].id + "\")," + "\"" + secuencia[i].valueSelect + "\"));"+ "\n"];
-                }else{
-                    javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].name + "\")," + "\"" + secuencia[i].valueSelect + "\"));"+ "\n"];
-                }
-            }else if (secuencia[i].srcType == "text") {
-                if (secuencia[i].id != ""){
-                    javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
-                } else if (secuencia[i].name != undefined && secuencia[i].name != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + "\"" + secuencia[i].name + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
-                } else if (secuencia[i].path != undefined && secuencia[i].path != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
-                }
-            } else if (secuencia[i].id != undefined && secuencia[i].id != "") {
-                // por aqui pasarían los input que tuviesen ID
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
-            } else if (secuencia[i].name != undefined && secuencia[i].name != "") {
-                javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + "\"" + secuencia[i].name + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
-            } else if (secuencia[i].path != undefined && secuencia[i].path != "") {
-                javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
-            } else {
-                javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
+                objeto = secuencia[i];
+                waitElementAndSelect(objeto);            
+            }else {
+                objeto = secuencia[i];
+                waitElementAndSendKeys(objeto);
             }
 
         }else if (secuencia[i].typeEvent == "checkbox") {
-            if (secuencia[i].id != undefined && secuencia[i].id != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
-            } else if (secuencia[i].name != undefined && secuencia[i].name != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"));" + "\n"];
-            } else if (secuencia[i].linkText != undefined && secuencia[i].linkText != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
-            } else if (secuencia[i].path != undefined && secuencia[i].path != "") {
-                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
-            } else {
-                    javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
-            }
-            
+            objeto = secuencia[i];
+            waitElementAndClick(objeto);
         }
     }
-
     return javaFunciones;
 }
+
+

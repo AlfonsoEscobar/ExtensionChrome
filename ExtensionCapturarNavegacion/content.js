@@ -83,7 +83,7 @@ function updateValue(e) {
     var path = "";
     var valueSelect = "";
     var type = e.type;
-    var srcTyp = null;
+    var srcType = null;
     for (var i = 0; i < e.path.length - 2; i++) {
         path = "/" + event.path[i].nodeName + path;
     };
