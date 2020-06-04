@@ -61,13 +61,9 @@ var frameViejo;
 const oyente = function listener(request, sender, sendResponse) {
 
     if(frameViejo !== request.frame){
-
         frameViejo = request.frame;
-
     }else{
-
         frameViejo = null;
-
     }
 
     mensaje = {
@@ -164,7 +160,7 @@ function diferenciarEventos(secuencia) {
     }
     for (i in secuencia) {
         if (secuencia[i].typeEvent == "click") {
-            if(secuencia[i].frame !== null){
+            if(secuencia[i].frame !== null && secuencia[i].frame !== ""){
                 javaFunciones = [javaFunciones + "changeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
             }
             if (secuencia[i].elementType == "a") {
