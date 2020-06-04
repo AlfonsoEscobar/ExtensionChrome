@@ -1,5 +1,5 @@
 // Constructor del objeto que luego queremos enviar al background
-function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerText, path, valueSelect, altImg, className,srcType, frame) {
+function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerText, path, valueSelect, altImg, className,srcType,frame) {
     this.id = id;
     this.name = name;
     this.elementType = elementType;
@@ -15,26 +15,36 @@ function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerTex
     this.frame = frame;
 }
 
+var frame;
+
+document.addEventListener("click", clickHandler);
+document.addEventListener("change", updateValue);
+
 //Es la funcion que se encarga de recoger el evento del click
 function clickHandler(event) {
     //Inicializa la variable "mandar" a falso para que solo cuando es un click valido se mande la informacion
     // al background
+   
     console.log(event);
-    let mandar = false;
-    let tipo = event.srcElement.localName;
-    let path = "";
-    let altImagen = "";
+    var mandar = false;
+    var elementType = event.srcElement.localName;
+    var path = "";
+    var altImagen = "";
+    var className="";
+    var srcType="";
+    frame = event.view.name;
 
    // Para poder separar los input de submit y reset y se comporten como un click.
-    if (event.srcElement.type == "submit" || event.srcElement.type == "reset" ){
-        tipo = event.srcElement.type;
-    }
+     if (event.srcElement.type == "submit" || event.srcElement.type == "reset"){
+            srcType = event.srcElement.type;
+            className = event.srcElement.className;
+        };
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
-    if (tipo == 'span' ||tipo == 'img' || tipo == 'td' || tipo == 'a' || tipo == 'button' || tipo =="submit" || tipo =="reset") {
+    if (elementType == 'span' ||elementType == 'img' || elementType == 'td' || elementType == 'a' || elementType == 'button' || srcType =="submit" || srcType =="reset" || srcType =="type") {
         // con esto recogemos todo el path del evento y lo guardamos en un string(lo ponemos a lenght -2 para que tome desde html)
-        for (let i = 0; i < event.path.length - 2; i++) {
+        for (var i = 0; i < event.path.length - 2; i++) {
             path = "/" + event.path[i].nodeName + path;
-        }
+        };
         // Con este for recorremos el tr para guardar los td que puedan estar dentro.
         // for (var i = 0; i < event.path[1].cells.length; i++) {
         //    var pathCells = pathCells + "<td>" + event.path[1].cells[i].innerText + "</td>";
@@ -42,7 +52,7 @@ function clickHandler(event) {
         // Captamos alt para información de la imagen pulsada
         if (event.srcElement.localName == "img") {
             altImagen = event.srcElement.alt;
-        }
+        };
        
         // Volcamos todos los datos a nuestro objeto para enviarlo
         var miobjeto = new DatosEvento (
@@ -58,38 +68,42 @@ function clickHandler(event) {
             altImagen,
             className,
             srcType,
-            event.view.name
+            frame
             );
         mandar = true;
-    }
+    };
     //Solo si la varible "mandar" es igual a true, es decir a dado en un elemento valido
     // se envia la informacion
     if (mandar) {
-        
-        if(typeof chrome.app.isInstalled !== 'undefined'){
-            chrome.runtime.sendMessage(miobjeto);
+       if(typeof chrome.app.isInstalled!=='undefined'){
+        chrome.runtime.sendMessage(miobjeto);
+        frame = "";
         }
     }
 }
 
 function updateValue(e) {
-    let path = "";
-    let valueSelect = "";
-    let type = e.type;
-
-    for (let i = 0; i < e.path.length - 2; i++) {
+    var path = "";
+    var valueSelect = "";
+    var type = e.type;
+    var srcType = null;
+    for (var i = 0; i < e.path.length - 2; i++) {
         path = "/" + event.path[i].nodeName + path;
-    }
+    };
 
     if (e.srcElement.localName == "select") {
         valueSelect = e.srcElement.selectedOptions[0].innerText;
-    }
+    };
+     if (e.srcElement.type == "text"){
+        srcType = e.srcElement.type;
+           
+        };
 // Para cambiarle la propiedad a type si es que marcan un checkbox y deje de ser input
     if (e.srcElement.type == "checkbox") {
         type = e.srcElement.type;
-    }
+    };
 
-    let datos = new DatosEvento(
+    var datos = new DatosEvento(
         e.srcElement.id, 
         e.srcElement.name, 
         e.srcElement.localName, 
@@ -101,12 +115,11 @@ function updateValue(e) {
         valueSelect,
         null,
         null,
-        null,
-        null
-        )
+        srcType,
+        frame
+    );
+    console.log(e);
 
     chrome.runtime.sendMessage(datos);
-}
-
-document.addEventListener("click", clickHandler);
-document.addEventListener("change", updateValue);
+    frame = "";
+};
