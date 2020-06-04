@@ -31,6 +31,7 @@ function clickHandler(event) {
     var altImagen = "";
     var className="";
     var srcType="";
+    
 
    // Para poder separar los input de submit y reset y se comporten como un click.
      if (event.srcElement.type == "submit" || event.srcElement.type == "reset"){
@@ -80,10 +81,12 @@ function clickHandler(event) {
 };
 
 function updateValue(e) {
+    console.log(e);
     var path = "";
     var valueSelect = "";
     var type = e.type;
     var srcType = null;
+    
     for (var i = 0; i < e.path.length - 2; i++) {
         path = "/" + event.path[i].nodeName + path;
     };
@@ -91,10 +94,11 @@ function updateValue(e) {
     if (e.srcElement.localName == "select") {
         valueSelect = e.srcElement.selectedOptions[0].innerText;
     };
-     if (e.srcElement.type == "text"){
-        srcType = e.srcElement.type;
-           
-        };
+
+    if (e.srcElement.type == "text"){
+        srcType = e.srcElement.type;   
+    };
+
 // Para cambiarle la propiedad a type si es que marcan un checkbox y deje de ser input
     if (e.srcElement.type == "checkbox") {
         type = e.srcElement.type;

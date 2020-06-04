@@ -12,9 +12,7 @@ var pulsado = true;
 // Variable para motrar mensajes por la consola del navegador
 var debug = true;
 // Variable para comparar los cambios de frame.
-var frameViejo = null;
-
-var javaFunciones = "";
+var frameViejo;
 //Se pone en funcionamiento o se apaga solo cuando se le da click al icono
 chrome.browserAction.onClicked.addListener(function() {
     if (pulsado) {
@@ -25,7 +23,7 @@ chrome.browserAction.onClicked.addListener(function() {
         pulsado = !pulsado;
     }
 });
-
+// Funcion que se llama cuando se pulsa por primera vez el icono para comenzar a grabar
 function empezando() {
     log(">>>>>>>>>> En funcionamiento <<<<<<<<<<");
     crearNotificacion("on", "Empezando a grabar", iconAct, "Empezando a grabar", 3000);
@@ -60,13 +58,14 @@ function terminando() {
 // Es la funcion que se le llama para recibir el mensaje y se vuelve a llamar cuando se termina para 
 // el "removeListener"
 const oyente = function listener(request, sender, sendResponse) {
-   
+
+    //Guardamos el cambio de frame si lo hubiese
     if(frameViejo !== request.frame){
         frameViejo = request.frame;
     }else{
         frameViejo = null;
     }
-
+    //REcogemos todas los atributos del objeto que nos ha llegado desde el content
     mensaje = {
         id: request.id,
         name: request.name,
@@ -83,7 +82,7 @@ const oyente = function listener(request, sender, sendResponse) {
         frame:frameViejo
     }
     console.log(mensaje);
-    //Guardamos los objetos segun van llegando
+    //Guardamos los objetos segun van llegando en un array
     secuencia.push(mensaje);
     log("Nº de secuencia >>>>>> " + secuencia.length);
 }
@@ -145,7 +144,9 @@ function saveFunctionJava() {
     });
     return URL.createObjectURL(bl);
 }
+//Funcion que escribe los click en los metodos de java.
 function waitElementAndClick(objeto){
+   let javaFunciones = "";
     if (objeto.id != undefined && objeto.id != "") {
         javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + objeto.id + "\"));" + "\n"];
     } else if (objeto.name != undefined && objeto.name != "") {
@@ -158,8 +159,9 @@ function waitElementAndClick(objeto){
         javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
     }
 }
-
+//Funcion que escribe los change en los metodos de java.
 function waitElementAndSendKeys(objeto){
+    let javaFunciones = "";
     if (objeto.id != undefined && objeto.id != ""){
         javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + objeto.id + "\")" + ", \"" + objeto.value + "\");" + "\n"];
     } else if (objeto.name != undefined && objeto.name != "") {
@@ -170,8 +172,9 @@ function waitElementAndSendKeys(objeto){
         javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
     }
 }
-
+//Funcion que escribe los select de los change en los metodos de java.
 function waitElementAndSelect(objeto){
+    let javaFunciones = "";
     if (objeto.id != undefined && objeto.id != ""){
         javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + objeto.id + "\")," + "\"" + objeto.valueSelect + "\"));"+ "\n"];
     }else{
@@ -180,14 +183,15 @@ function waitElementAndSelect(objeto){
 }
 
 function diferenciarEventos(secuencia) {
-    let objeto;
+    let javaFunciones = "";
     if (secuencia[0].url != "") {
         javaFunciones = [javaFunciones + "driver.get(" + "\"" + secuencia[0].url + "\"" + ");" + "\n"];
     }
     for (i in secuencia) {
+        //Diferenciamos los eventos si es un click
         if (secuencia[i].typeEvent == "click") {
            if(secuencia[i].frame !== null && secuencia[i].frame !== ""){
-                 javaFunciones = [javaFunciones + "changeFrame(" + "\"" + secuencia[i].frame + "\"));" + "\n"];
+                 javaFunciones = [javaFunciones + "changeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
             }
             if (secuencia[i].elementType == "a") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
@@ -206,21 +210,18 @@ function diferenciarEventos(secuencia) {
                 }
                 
             } else {
-                objeto = secuencia[i];
-                waitElementAndClick(objeto);
+               waitElementAndClick(secuencia[i]);
             }
+           
         } else if (secuencia[i].typeEvent == "change") {
             if (secuencia[i].elementType == "select") {
-                objeto = secuencia[i];
-                waitElementAndSelect(objeto);            
+               waitElementAndSelect(secuencia[i]);            
             }else {
-                objeto = secuencia[i];
-                waitElementAndSendKeys(objeto);
+               waitElementAndSendKeys(secuencia[i]);
             }
-
+         
         }else if (secuencia[i].typeEvent == "checkbox") {
-            objeto = secuencia[i];
-            waitElementAndClick(objeto);
+          waitElementAndClick(secuencia[i]);
         }
     }
     return javaFunciones;
