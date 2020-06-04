@@ -61,9 +61,11 @@ function clickHandler(event) {
     //Solo si la varible "mandar" es igual a true, es decir a dado en un elemento valido
     // se envia la informacion
     if (mandar) {
-        chrome.runtime.sendMessage(miobjeto);
+        if(typeof chrome.app.isInstalled!=='undefined'){
+            chrome.runtime.sendMessage(miobjeto);
+        }
     }
-};
+}
 
 function updateValue(e) {
     var path = "";

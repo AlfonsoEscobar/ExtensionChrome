@@ -127,7 +127,10 @@ function save() {
 // Funcion que guarda toda la informacion del array de la secuencia y llama a las funciones Java
 function saveFunctionJava() {
     var htmlContent = save();
-    htmlContent = [htmlContent + diferenciarEventos(secuencia)];
+    htmlContent = ["@Test" + "\n" 
+    + "public void test" + Date.now() + "() throws Exception {"+ "\n" 
+    + htmlContent + diferenciarEventos(secuencia) + "}"];  
+    
     var bl = new Blob(htmlContent, {
         type: "text/txt"
     });
