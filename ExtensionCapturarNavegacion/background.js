@@ -66,7 +66,9 @@ const oyente = function listener(request, sender, sendResponse) {
         innerText: request.innerText,
         path: request.path,
         valueSelect:request.valueSelect,
-        altImg: request.altImg
+        altImg: request.altImg,
+        className:request.className,
+        srcType:request.srcType
     }
     console.log(mensaje);
     //Guardamos los objetos segun van llegando
@@ -111,6 +113,8 @@ function save() {
             " - LINKTEXT: " + secuencia[i].linkText + 
             " - VALUESELECT: " + secuencia[i].valueSelect + 
             " - ALTIMG: " + secuencia[i].altImg + 
+            " - TARGET: " + secuencia[i].className + 
+            " - SRCTYPE: " + secuencia[i].srcType + 
             "\nPATH: " + secuencia[i].path.toLowerCase() + "\n"];
         }
     }
@@ -147,6 +151,13 @@ function diferenciarEventos(secuencia) {
             
             } else if (secuencia[i].elementType == "td") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
+            } else if (secuencia[i].srcType == "submit") {
+                if(secuencia[i].className != undefined && secuencia[i].className != ""){
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.cssSelector(\""+secuencia[i].elementType +"." + secuencia[i].className + "\"));" + "\n"];
+                }else{
+                   javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
+                }
+                
             } else {
                 if (secuencia[i].id != undefined && secuencia[i].id != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];

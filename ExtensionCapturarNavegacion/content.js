@@ -1,5 +1,5 @@
 // Constructor del objeto que luego queremos enviar al background
-function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerText, path, valueSelect,altImg) {
+function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerText, path, valueSelect, altImg, className,srcType) {
     this.id = id;
     this.name = name;
     this.elementType = elementType;
@@ -10,6 +10,8 @@ function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerTex
     this.path = path;
     this.valueSelect = valueSelect;
     this.altImg = altImg;
+    this.className = className;
+    this.srcType = srcType;
 }
 document.addEventListener("click", clickHandler);
 document.addEventListener("change", updateValue);
@@ -19,15 +21,18 @@ function clickHandler(event) {
     // al background
     console.log(event);
     var mandar = false;
-    var tipo = event.srcElement.localName;
+    var elementType = event.srcElement.localName;
     var path = "";
     var altImagen = "";
+    var className="";
+    var srcType="";
    // Para poder separar los input de submit y reset y se comporten como un click.
      if (event.srcElement.type == "submit" || event.srcElement.type == "reset" ){
-            tipo = event.srcElement.type;
+            srcType = event.srcElement.type;
+            className = event.srcElement.className;
         };
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
-    if (tipo == 'span' ||tipo == 'img' || tipo == 'td' || tipo == 'a' || tipo == 'button' || tipo =="submit" || tipo =="reset") {
+    if (elementType == 'span' ||elementType == 'img' || elementType == 'td' || elementType == 'a' || elementType == 'button' || srcType =="submit" || srcType =="reset") {
         // con esto recogemos todo el path del evento y lo guardamos en un string(lo ponemos a lenght -2 para que tome desde html)
         for (var i = 0; i < event.path.length - 2; i++) {
             path = "/" + event.path[i].nodeName + path;
@@ -45,21 +50,22 @@ function clickHandler(event) {
         var miobjeto = new DatosEvento (
             event.srcElement.id, 
             event.srcElement.name, 
-            tipo, 
+            elementType, 
             event.type, 
             event.srcElement.value, 
             event.srcElement.textContent, 
             null,
             path.toLowerCase(), 
             null,
-            altImagen
+            altImagen,
+            className,
+            srcType
             );
         mandar = true;
     };
     //Solo si la varible "mandar" es igual a true, es decir a dado en un elemento valido
     // se envia la informacion
     if (mandar) {
-        
        if(typeof chrome.app.isInstalled!=='undefined'){
         chrome.runtime.sendMessage(miobjeto);
         };
@@ -93,6 +99,8 @@ function updateValue(e) {
         null, 
         path.toLowerCase(), 
         valueSelect,
+        null,
+        null,
         null
         );
 
