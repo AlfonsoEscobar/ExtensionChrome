@@ -11,6 +11,8 @@ var mensaje = {};
 var pulsado = true;
 // Variable para motrar mensajes por la consola del navegador
 var debug = true;
+// Variable para comparar los cambios de frame.
+var frameViejo = null;
 //Se pone en funcionamiento o se apaga solo cuando se le da click al icono
 chrome.browserAction.onClicked.addListener(function() {
     if (pulsado) {
@@ -56,6 +58,13 @@ function terminando() {
 // Es la funcion que se le llama para recibir el mensaje y se vuelve a llamar cuando se termina para 
 // el "removeListener"
 const oyente = function listener(request, sender, sendResponse) {
+   
+    if(frameViejo !== request.frame){
+        frameViejo = request.frame;
+    }else{
+        frameViejo = null;
+    }
+
     mensaje = {
         id: request.id,
         name: request.name,
@@ -68,7 +77,8 @@ const oyente = function listener(request, sender, sendResponse) {
         valueSelect:request.valueSelect,
         altImg: request.altImg,
         className:request.className,
-        srcType:request.srcType
+        srcType:request.srcType,
+        frame:frameViejo
     }
     console.log(mensaje);
     //Guardamos los objetos segun van llegando
@@ -141,6 +151,9 @@ function diferenciarEventos(secuencia) {
     }
     for (i in secuencia) {
         if (secuencia[i].typeEvent == "click") {
+           if(secuencia[i].frame !== null && secuencia[i].frame !== ""){
+                 javaFunciones = [javaFunciones + "changeFrame(" + "\"" + secuencia[i].frame + "\"));" + "\n"];
+            }
             if (secuencia[i].elementType == "a") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
                 // Con este if se puede extraer todos los td que puedan estar dentro de un tr
@@ -178,6 +191,14 @@ function diferenciarEventos(secuencia) {
                 }else{
                     javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + secuencia[i].name + "\")," + "\"" + secuencia[i].valueSelect + "\"));"+ "\n"];
                 }
+            }else if (secuencia[i].srcType == "text") {
+                if (secuencia[i].id != ""){
+                    javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
+                } else if (secuencia[i].name != undefined && secuencia[i].name != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.name(" + "\"" + secuencia[i].name + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
+                } else if (secuencia[i].path != undefined && secuencia[i].path != "") {
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
+                }
             } else if (secuencia[i].id != undefined && secuencia[i].id != "") {
                 // por aqui pasarían los input que tuviesen ID
                 javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + secuencia[i].id + "\")" + ", \"" + secuencia[i].value + "\");" + "\n"];
@@ -190,18 +211,20 @@ function diferenciarEventos(secuencia) {
             }
 
         }else if (secuencia[i].typeEvent == "checkbox") {
-              if (secuencia[i].id != undefined && secuencia[i].id != "") {
+            if (secuencia[i].id != undefined && secuencia[i].id != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
-                } else if (secuencia[i].name != undefined && secuencia[i].name != "") {
+            } else if (secuencia[i].name != undefined && secuencia[i].name != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.name(" + "\"" + secuencia[i].name + "\"));" + "\n"];
-                } else if (secuencia[i].linkText != undefined && secuencia[i].linkText != "") {
+            } else if (secuencia[i].linkText != undefined && secuencia[i].linkText != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
-                } else if (secuencia[i].path != undefined && secuencia[i].path != "") {
+            } else if (secuencia[i].path != undefined && secuencia[i].path != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
-                } else {
+            } else {
                     javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
-                }
+            }
+            
         }
     }
+
     return javaFunciones;
 }

@@ -1,5 +1,6 @@
 // Constructor del objeto que luego queremos enviar al background
-function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerText, path, valueSelect, altImg, className,srcType) {
+
+function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerText, path, valueSelect, altImg, className,srcType,frame) {
     this.id = id;
     this.name = name;
     this.elementType = elementType;
@@ -12,13 +13,17 @@ function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerTex
     this.altImg = altImg;
     this.className = className;
     this.srcType = srcType;
+    this.frame = frame;
 }
+
 document.addEventListener("click", clickHandler);
 document.addEventListener("change", updateValue);
+
 //Es la funcion que se encarga de recoger el evento del click
 function clickHandler(event) {
     //Inicializa la variable "mandar" a falso para que solo cuando es un click valido se mande la informacion
     // al background
+   
     console.log(event);
     var mandar = false;
     var elementType = event.srcElement.localName;
@@ -26,13 +31,14 @@ function clickHandler(event) {
     var altImagen = "";
     var className="";
     var srcType="";
+
    // Para poder separar los input de submit y reset y se comporten como un click.
-     if (event.srcElement.type == "submit" || event.srcElement.type == "reset" ){
+     if (event.srcElement.type == "submit" || event.srcElement.type == "reset"){
             srcType = event.srcElement.type;
             className = event.srcElement.className;
         };
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
-    if (elementType == 'span' ||elementType == 'img' || elementType == 'td' || elementType == 'a' || elementType == 'button' || srcType =="submit" || srcType =="reset") {
+    if (elementType == 'span' ||elementType == 'img' || elementType == 'td' || elementType == 'a' || elementType == 'button' || srcType =="submit" || srcType =="reset" || srcType =="type") {
         // con esto recogemos todo el path del evento y lo guardamos en un string(lo ponemos a lenght -2 para que tome desde html)
         for (var i = 0; i < event.path.length - 2; i++) {
             path = "/" + event.path[i].nodeName + path;
@@ -59,7 +65,8 @@ function clickHandler(event) {
             null,
             altImagen,
             className,
-            srcType
+            srcType,
+            event.view.name
             );
         mandar = true;
     };
@@ -76,7 +83,7 @@ function updateValue(e) {
     var path = "";
     var valueSelect = "";
     var type = e.type;
-
+    var srcTyp = null;
     for (var i = 0; i < e.path.length - 2; i++) {
         path = "/" + event.path[i].nodeName + path;
     };
@@ -84,6 +91,10 @@ function updateValue(e) {
     if (e.srcElement.localName == "select") {
         valueSelect = e.srcElement.selectedOptions[0].innerText;
     };
+     if (e.srcElement.type == "text"){
+        srcType = e.srcElement.type;
+           
+        };
 // Para cambiarle la propiedad a type si es que marcan un checkbox y deje de ser input
     if (e.srcElement.type == "checkbox") {
         type = e.srcElement.type;
@@ -101,6 +112,7 @@ function updateValue(e) {
         valueSelect,
         null,
         null,
+        srcType,
         null
         );
 
