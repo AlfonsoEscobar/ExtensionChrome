@@ -81,6 +81,8 @@ const oyente = function listener(request, sender, sendResponse) {
         path: request.path,
         valueSelect:request.valueSelect,
         altImg: request.altImg,
+        className:request.className,
+        srcType:request.srcType,
         frame: frameViejo
     }
     console.log(mensaje);
@@ -123,16 +125,18 @@ function save() {
             htmlContent = ["/** " + secuencia[i].url + "\n"];
         } else {
             htmlContent = [htmlContent + 
-            "ID: " + secuencia[i].id + 
-            " - NAME: " + secuencia[i].name + 
-            " - ELEMENT_TYPE: " + secuencia[i].elementType + 
-            " - TYPE_EVENT: " + secuencia[i].typeEvent + 
-            " - VALUE: " + secuencia[i].value + 
-            " - LINKTEXT: " + secuencia[i].linkText + 
-            " - VALUESELECT: " + secuencia[i].valueSelect + 
-            " - ALTIMG: " + secuencia[i].altImg + 
-            "\nPATH: " + secuencia[i].path.toLowerCase() + "\n"];
-        }
+                "ID: " + secuencia[i].id + 
+                " - NAME: " + secuencia[i].name + 
+                " - ELEMENT_TYPE: " + secuencia[i].elementType + 
+                " - TYPE_EVENT: " + secuencia[i].typeEvent + 
+                " - VALUE: " + secuencia[i].value + 
+                " - LINKTEXT: " + secuencia[i].linkText + 
+                " - VALUESELECT: " + secuencia[i].valueSelect + 
+                " - ALTIMG: " + secuencia[i].altImg + 
+                " - TARGET: " + secuencia[i].className + 
+                " - SRCTYPE: " + secuencia[i].srcType + 
+                "\nPATH: " + secuencia[i].path.toLowerCase() + "\n"];
+            }
     }
     htmlContent = htmlContent + "**/\n";
     return htmlContent;
@@ -173,6 +177,13 @@ function diferenciarEventos(secuencia) {
             
             } else if (secuencia[i].elementType == "td") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
+            } else if (secuencia[i].srcType == "submit") {
+                if(secuencia[i].className != undefined && secuencia[i].className != ""){
+                    javaFunciones = [javaFunciones + "waitElementAndClick(By.cssSelector(\""+secuencia[i].elementType +"." + secuencia[i].className + "\"));" + "\n"];
+                }else{
+                   javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
+                }
+                
             } else {
                 if (secuencia[i].id != undefined && secuencia[i].id != "") {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];

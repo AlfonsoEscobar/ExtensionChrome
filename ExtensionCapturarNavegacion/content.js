@@ -1,5 +1,5 @@
 // Constructor del objeto que luego queremos enviar al background
-function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerText, path, valueSelect, altImg, frame) {
+function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerText, path, valueSelect, altImg, className,srcType, frame) {
     this.id = id;
     this.name = name;
     this.elementType = elementType;
@@ -10,6 +10,8 @@ function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerTex
     this.path = path;
     this.valueSelect = valueSelect;
     this.altImg = altImg;
+    this.className = className;
+    this.srcType = srcType;
     this.frame = frame;
 }
 
@@ -46,7 +48,7 @@ function clickHandler(event) {
         var miobjeto = new DatosEvento (
             event.srcElement.id, 
             event.srcElement.name, 
-            tipo, 
+            elementType, 
             event.type, 
             event.srcElement.value, 
             event.srcElement.textContent, 
@@ -54,6 +56,8 @@ function clickHandler(event) {
             path.toLowerCase(), 
             null,
             altImagen,
+            className,
+            srcType,
             event.view.name
             );
         mandar = true;
@@ -95,7 +99,9 @@ function updateValue(e) {
         null, 
         path.toLowerCase(), 
         valueSelect,
-        null, 
+        null,
+        null,
+        null,
         null
         )
 
