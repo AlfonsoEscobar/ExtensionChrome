@@ -54,9 +54,22 @@ function terminando(){
 	chrome.runtime.onMessage.removeListener(oyente);
 }
 
+var frameViejo;
+
 // Es la funcion que se le llama para recibir el mensaje y se vuelve a llamar cuando se termina para 
 // el "removeListener"
 const oyente = function listener(request, sender, sendResponse) {
+
+    if(frameViejo !== request.frame){
+
+        frameViejo = request.frame;
+
+    }else{
+
+        frameViejo = null;
+
+    }
+
     mensaje = {
         id: request.id,
         name: request.name,
@@ -67,7 +80,8 @@ const oyente = function listener(request, sender, sendResponse) {
         innerText: request.innerText,
         path: request.path,
         valueSelect:request.valueSelect,
-        altImg: request.altImg
+        altImg: request.altImg,
+        frame: frameViejo
     }
     console.log(mensaje);
     //Guardamos los objetos segun van llegando
@@ -146,6 +160,9 @@ function diferenciarEventos(secuencia) {
     }
     for (i in secuencia) {
         if (secuencia[i].typeEvent == "click") {
+            if(secuencia[i].frame !== null){
+                javaFunciones = [javaFunciones + "changeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
+            }
             if (secuencia[i].elementType == "a") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
                 // Con este if se puede extraer todos los td que puedan estar dentro de un tr
