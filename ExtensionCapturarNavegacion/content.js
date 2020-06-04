@@ -86,11 +86,18 @@ function updateValue(e) {
     var valueSelect = "";
     var type = e.type;
     var srcType = null;
+    var frameActual;
     
     for (var i = 0; i < e.path.length - 2; i++) {
         path = "/" + event.path[i].nodeName + path;
     };
 
+    // for (var i = 0; i < e.path.length; i++) {
+    //     // if(e.path[i].name !== null || e.path[i].name !== undefined){
+           
+    //     // }
+    // };
+    frameActual = e.path[9].name;
     if (e.srcElement.localName == "select") {
         valueSelect = e.srcElement.selectedOptions[0].innerText;
     };
@@ -117,7 +124,7 @@ function updateValue(e) {
         null,
         null,
         srcType,
-        null
+        frameActual
         );
 
     chrome.runtime.sendMessage(datos);

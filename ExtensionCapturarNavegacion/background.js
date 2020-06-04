@@ -1,8 +1,8 @@
-//Icono de activado
+// Icono de activado
 var iconAct = "img/activate.png";
-//Icono desactivado
+// Icono desactivado
 var iconDes = "img/desactivate.png";
-//Array donde se guardaran los eventos que vayan grabando
+// Array donde se guardaran los eventos que vayan grabando
 var secuencia = [];
 // Inicializacion del objeto que se va guardando
 var mensaje = {};
@@ -13,7 +13,9 @@ var pulsado = true;
 var debug = true;
 // Variable para comparar los cambios de frame.
 var frameViejo;
-//Se pone en funcionamiento o se apaga solo cuando se le da click al icono
+// Variable para guardar el string de los metodos java
+var javaFunciones;
+// Se pone en funcionamiento o se apaga solo cuando se le da click al icono
 chrome.browserAction.onClicked.addListener(function() {
     if (pulsado) {
         empezando();
@@ -51,6 +53,8 @@ function terminando() {
     });
     secuencia = [];
     mensaje = {};
+    frameViejo = "";
+    javaFunciones = "";
     crearNotificacion("off", "Terminando de grabar", iconDes, "Terminando de grabar", 1500);
     log(">>>>>>> Terminando <<<<<<");
     chrome.runtime.onMessage.removeListener(oyente);
@@ -58,14 +62,8 @@ function terminando() {
 // Es la funcion que se le llama para recibir el mensaje y se vuelve a llamar cuando se termina para 
 // el "removeListener"
 const oyente = function listener(request, sender, sendResponse) {
-
-    //Guardamos el cambio de frame si lo hubiese
-    if(frameViejo !== request.frame){
-        frameViejo = request.frame;
-    }else{
-        frameViejo = null;
-    }
-    //REcogemos todas los atributos del objeto que nos ha llegado desde el content
+   
+    // Recogemos todas los atributos del objeto que nos ha llegado desde el content
     mensaje = {
         id: request.id,
         name: request.name,
@@ -79,10 +77,10 @@ const oyente = function listener(request, sender, sendResponse) {
         altImg: request.altImg,
         className:request.className,
         srcType:request.srcType,
-        frame:frameViejo
+        frame:request.frame
     }
     console.log(mensaje);
-    //Guardamos los objetos segun van llegando en un array
+    // Guardamos los objetos segun van llegando en un array
     secuencia.push(mensaje);
     log("Nº de secuencia >>>>>> " + secuencia.length);
 }
@@ -144,9 +142,8 @@ function saveFunctionJava() {
     });
     return URL.createObjectURL(bl);
 }
-//Funcion que escribe los click en los metodos de java.
+// Funcion que escribe los click en los metodos de java.
 function waitElementAndClick(objeto){
-   let javaFunciones = "";
     if (objeto.id != undefined && objeto.id != "") {
         javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + objeto.id + "\"));" + "\n"];
     } else if (objeto.name != undefined && objeto.name != "") {
@@ -159,9 +156,8 @@ function waitElementAndClick(objeto){
         javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
     }
 }
-//Funcion que escribe los change en los metodos de java.
+// Funcion que escribe los change en los metodos de java.
 function waitElementAndSendKeys(objeto){
-    let javaFunciones = "";
     if (objeto.id != undefined && objeto.id != ""){
         javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + objeto.id + "\")" + ", \"" + objeto.value + "\");" + "\n"];
     } else if (objeto.name != undefined && objeto.name != "") {
@@ -172,9 +168,8 @@ function waitElementAndSendKeys(objeto){
         javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
     }
 }
-//Funcion que escribe los select de los change en los metodos de java.
+// Funcion que escribe los select de los change en los metodos de java.
 function waitElementAndSelect(objeto){
-    let javaFunciones = "";
     if (objeto.id != undefined && objeto.id != ""){
         javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + objeto.id + "\")," + "\"" + objeto.valueSelect + "\"));"+ "\n"];
     }else{
@@ -183,15 +178,16 @@ function waitElementAndSelect(objeto){
 }
 
 function diferenciarEventos(secuencia) {
-    let javaFunciones = "";
+    javaFunciones= "";
     if (secuencia[0].url != "") {
         javaFunciones = [javaFunciones + "driver.get(" + "\"" + secuencia[0].url + "\"" + ");" + "\n"];
     }
     for (i in secuencia) {
-        //Diferenciamos los eventos si es un click
+        // Diferenciamos los eventos si es un click
         if (secuencia[i].typeEvent == "click") {
-           if(secuencia[i].frame !== null && secuencia[i].frame !== ""){
-                 javaFunciones = [javaFunciones + "changeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
+           if(secuencia[i].frame !== frameViejo){
+                frameViejo = secuencia[i].frame;
+                javaFunciones = [javaFunciones + "changeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
             }
             if (secuencia[i].elementType == "a") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
