@@ -202,7 +202,7 @@ function diferenciarEventos(secuencia) {
             } else if (secuencia[i].srcType == "submit") {
                 if(secuencia[i].className != undefined && secuencia[i].className != ""){
                     javaFunciones = [javaFunciones + "\twaitElementAndClick(By.cssSelector(\""+secuencia[i].elementType +"." + secuencia[i].className + "\"));" + "\n"];
-                }else{
+               }else{    
                    javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
                 }    
             } else {
@@ -216,6 +216,8 @@ function diferenciarEventos(secuencia) {
             }
         }else if (secuencia[i].typeEvent == "checkbox") {
           waitElementAndClick(secuencia[i]);
+        }else if (secuencia[i].typeEvent == "radio") {
+            javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
         }
     }
     return javaFunciones;
