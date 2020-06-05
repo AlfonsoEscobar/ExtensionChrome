@@ -92,12 +92,12 @@ function updateValue(e) {
         path = "/" + event.path[i].nodeName + path;
     };
 
-    // for (var i = 0; i < e.path.length; i++) {
-    //     // if(e.path[i].name !== null || e.path[i].name !== undefined){
-           
-    //     // }
-    // };
-    frameActual = e.path[9].name;
+    for (var i = 0; i < e.path.length; i++) {
+        if(e.path[i].name !== undefined){
+             frameActual = e.path[i].name;
+        }
+    };
+    // frameActual = e.path[9].name;
     if (e.srcElement.localName == "select") {
         valueSelect = e.srcElement.selectedOptions[0].innerText;
     };

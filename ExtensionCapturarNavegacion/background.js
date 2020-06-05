@@ -36,7 +36,7 @@ function empezando() {
         mensaje = {
             url: tabs[0].url
         }
-        console.log(mensaje);
+        log(mensaje);
         secuencia.push(mensaje);
         log("Nº de secuencia >>>>>> " + secuencia.length);
     });
@@ -79,7 +79,7 @@ const oyente = function listener(request, sender, sendResponse) {
         srcType:request.srcType,
         frame:request.frame
     }
-    console.log(mensaje);
+    log(mensaje);
     // Guardamos los objetos segun van llegando en un array
     secuencia.push(mensaje);
     log("Nº de secuencia >>>>>> " + secuencia.length);
@@ -142,7 +142,7 @@ function saveFunctionJava() {
     });
     return URL.createObjectURL(bl);
 }
-// Funcion que escribe los click en los metodos de java.
+// Funcion que escribe los metodos de java de los click.
 function waitElementAndClick(objeto){
     if (objeto.id != undefined && objeto.id != "") {
         javaFunciones = [javaFunciones + "waitElementAndClick(By.id(" + "\"" + objeto.id + "\"));" + "\n"];
@@ -156,7 +156,7 @@ function waitElementAndClick(objeto){
         javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
     }
 }
-// Funcion que escribe los change en los metodos de java.
+// Funcion que escribe los metodos de java de los change.
 function waitElementAndSendKeys(objeto){
     if (objeto.id != undefined && objeto.id != ""){
         javaFunciones = [javaFunciones + "waitElementAndSendKeys(By.id(" + "\"" + objeto.id + "\")" + ", \"" + objeto.value + "\");" + "\n"];
@@ -168,7 +168,7 @@ function waitElementAndSendKeys(objeto){
         javaFunciones = [javaFunciones + "No se ha podido identificar el evento" + "\n"];
     }
 }
-// Funcion que escribe los select de los change en los metodos de java.
+// Funcion que escribe los metodos de java de los select de los change
 function waitElementAndSelect(objeto){
     if (objeto.id != undefined && objeto.id != ""){
         javaFunciones = [javaFunciones + "waitElementAndSelect(By.id(" + "\"" + objeto.id + "\")," + "\"" + objeto.valueSelect + "\"));"+ "\n"];
@@ -203,19 +203,16 @@ function diferenciarEventos(secuencia) {
                     javaFunciones = [javaFunciones + "waitElementAndClick(By.cssSelector(\""+secuencia[i].elementType +"." + secuencia[i].className + "\"));" + "\n"];
                 }else{
                    javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
-                }
-                
+                }    
             } else {
                waitElementAndClick(secuencia[i]);
             }
-           
         } else if (secuencia[i].typeEvent == "change") {
             if (secuencia[i].elementType == "select") {
                waitElementAndSelect(secuencia[i]);            
             }else {
                waitElementAndSendKeys(secuencia[i]);
             }
-         
         }else if (secuencia[i].typeEvent == "checkbox") {
           waitElementAndClick(secuencia[i]);
         }
