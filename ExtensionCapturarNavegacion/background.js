@@ -48,7 +48,7 @@ function empezando() {
 function terminando() {
     chrome.downloads.download({
         url: saveFunctionJava(),
-        filename: "Test.txt",
+        filename: "Test_unitario.txt",
         saveAs: true
     });
     secuencia = [];
@@ -106,6 +106,7 @@ function log(mensaje) {
     }
 }
 // Funcion que se utiliza para guardar la informacion en un archivo
+// Funcion que se utiliza para guardar la informacion en un archivo
 function save() {
     var htmlContent = "";
     for (i in secuencia) {
@@ -131,16 +132,27 @@ function save() {
 }
 // Funcion que se utiliza para guardar la informacion en un archivo con metodos Java
 function saveFunctionJava() {
-    var htmlContent = save();
-    htmlContent = ["@Test" + "\n" 
+    var htmlContent;
+    htmlContent = [
+    "/**" + "\n"
+        + "* TESTLINK ->"+ "\n"
+        + "*" + "\n"
+        + "*    titulo="+"\n"
+        + "*    descripcion="+"\n"
+        + "*    precondiciones="+"\n"
+        + "*    idRequisitosCubiertos="+"\n"
+    + "**/" + "\n"
+    +"public class Test_unitario {" + "\n"
+    + "@Test" + "\n" 
     + "public void test" + Date.now() + "() throws Exception {"+ "\n" 
-    + htmlContent + diferenciarEventos(secuencia) + "}"];  
+    + diferenciarEventos(secuencia) + "}"+ "\n" + "}"];  
     
     var bl = new Blob(htmlContent, {
         type: "text/txt"
     });
     return URL.createObjectURL(bl);
 }
+// Funcion que escribe los metodos de java de los click.
 function waitElementAndClick(objeto){
     if (objeto.id != undefined && objeto.id != "") {
         javaFunciones = [javaFunciones + "\twaitElementAndClick(By.id(" + "\"" + objeto.id + "\"));" + "\n"];
@@ -154,7 +166,7 @@ function waitElementAndClick(objeto){
         javaFunciones = [javaFunciones + "\tNo se ha podido identificar el evento" + "\n"];
     }
 }
-
+// Funcion que escribe los metodos de java de los change.
 function waitElementAndSendKeys(objeto){
     if (objeto.id != undefined && objeto.id != ""){
         javaFunciones = [javaFunciones + "\twaitElementAndSendKeys(By.id(" + "\"" + objeto.id + "\")" + ", \"" + objeto.value + "\");" + "\n"];
@@ -166,7 +178,7 @@ function waitElementAndSendKeys(objeto){
         javaFunciones = [javaFunciones + "\tNo se ha podido identificar el evento" + "\n"];
     }
 }
-
+// Funcion que escribe los metodos de java de los select de los change
 function waitElementAndSelect(objeto){
     if (objeto.id != undefined && objeto.id != ""){
         javaFunciones = [javaFunciones + "\twaitElementAndSelect(By.id(" + "\"" + objeto.id + "\")," + "\"" + objeto.valueSelect + "\"));"+ "\n"];
@@ -174,14 +186,30 @@ function waitElementAndSelect(objeto){
         javaFunciones = [javaFunciones + "\twaitElementAndSelect(By.id(" + "\"" + objeto.name + "\")," + "\"" + objeto.valueSelect + "\"));"+ "\n"];
     }
 }
-
+// Funcion que escribe los metodos de java de Submit y Reset
+function waitElementAndClick_Submit_Reset(objeto){
+    if(objeto.className != undefined && objeto.className != ""){
+        javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.srcType +"' and @class='"+ objeto.className +"']\"));" + "\n"];
+      
+    }else if(objeto.name != undefined && objeto.name != ""){
+        javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.srcType +"' and @name='"+ objeto.name +"']\"));" + "\n"];
+       
+    }else if(objeto.id != undefined && objeto.id != ""){
+        javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.srcType +"' and @id='"+ objeto.id +"']\"));" + "\n"];
+       
+    }else if(objeto.value != undefined && objeto.value != ""){
+        javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.srcType +"' and @value='"+ objeto.value +"']\"));" + "\n"];
+    }
+}
 function diferenciarEventos(secuencia) {
-    javaFunciones = "";
+    javaFunciones= "";
     if (secuencia[0].url != "") {
         javaFunciones = [javaFunciones + "\tdriver.get(" + "\"" + secuencia[0].url + "\"" + ");" + "\n"];
     }
     for (i in secuencia) {
+        // Diferenciamos los eventos si es un click
         if (secuencia[i].typeEvent == "click") {
+            // Capturamos en un método cuando hay un cambio de frame
            if(secuencia[i].frame != frameViejo && secuencia[i].frame != ""){
                 frameViejo = secuencia[i].frame;
                 javaFunciones = [javaFunciones + "\tchangeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
@@ -196,24 +224,22 @@ function diferenciarEventos(secuencia) {
             } else if (secuencia[i].elementType == "td") {
                 javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else if (secuencia[i].srcType == "submit") {
-                if(secuencia[i].className != undefined && secuencia[i].className != ""){
-                    javaFunciones = [javaFunciones + "\twaitElementAndClick(By.cssSelector(\""+secuencia[i].elementType +"." + secuencia[i].className + "\"));" + "\n"];
-                }else{
-                   javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
-                }
-                
+                waitElementAndClick_Submit_Reset(secuencia[i]);
+            } else if (secuencia[i].srcType == "reset") {
+                waitElementAndClick_Submit_Reset(secuencia[i]);
             } else {
-                waitElementAndClick(secuencia[i]);
+               waitElementAndClick(secuencia[i]);
             }
         } else if (secuencia[i].typeEvent == "change") {
             if (secuencia[i].elementType == "select") {
-                waitElementAndSelect(secuencia[i]);            
+               waitElementAndSelect(secuencia[i]);            
             }else {
-                waitElementAndSendKeys(secuencia[i]);
+               waitElementAndSendKeys(secuencia[i]);
             }
-
         }else if (secuencia[i].typeEvent == "checkbox") {
-            waitElementAndClick(secuencia[i]);
+          waitElementAndClick(secuencia[i]);
+        }else if (secuencia[i].typeEvent == "radio") {
+            javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
         }
     }
     return javaFunciones;

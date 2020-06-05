@@ -106,6 +106,10 @@ function updateValue(e) {
         type = e.srcElement.type;
     }
 
+    if (e.srcElement.type == "radio") {
+        type = e.srcElement.type;
+    }
+
     var datos = new DatosEvento(
         e.srcElement.id, 
         e.srcElement.name, 
