@@ -53,6 +53,8 @@ function terminando() {
     });
     secuencia = [];
     mensaje = {};
+    frameViejo = "";
+    javaFunciones = "";
     crearNotificacion("off", "Terminando de grabar", iconDes, "Terminando de grabar", 1500);
     log(">>>>>>> Terminando <<<<<<");
     chrome.runtime.onMessage.removeListener(oyente);
@@ -60,12 +62,6 @@ function terminando() {
 // Es la funcion que se le llama para recibir el mensaje y se vuelve a llamar cuando se termina para 
 // el "removeListener"
 const oyente = function listener(request, sender, sendResponse) {
-   
-    if(frameViejo !== request.frame){
-        frameViejo = request.frame;
-    }else{
-        frameViejo = null;
-    }
 
     mensaje = {
         id: request.id,
@@ -186,8 +182,9 @@ function diferenciarEventos(secuencia) {
     }
     for (i in secuencia) {
         if (secuencia[i].typeEvent == "click") {
-           if(secuencia[i].frame !== null && secuencia[i].frame !== ""){
-                 javaFunciones = [javaFunciones + "changeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
+           if(secuencia[i].frame !== frameViejo){
+                frameViejo = secuencia[i].frame;
+                javaFunciones = [javaFunciones + "changeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
             }
             if (secuencia[i].elementType == "a") {
                 javaFunciones = [javaFunciones + "waitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
