@@ -185,7 +185,8 @@ function diferenciarEventos(secuencia) {
     for (i in secuencia) {
         // Diferenciamos los eventos si es un click
         if (secuencia[i].typeEvent == "click") {
-           if(secuencia[i].frame !== frameViejo){
+            // Capturamos en un método cuando hay un cambio de frame
+           if(secuencia[i].frame != frameViejo && secuencia[i].frame != ""){
                 frameViejo = secuencia[i].frame;
                 javaFunciones = [javaFunciones + "changeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
             }
