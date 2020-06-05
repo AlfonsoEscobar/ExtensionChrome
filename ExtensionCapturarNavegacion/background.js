@@ -176,7 +176,21 @@ function waitElementAndSelect(objeto){
         javaFunciones = [javaFunciones + "\twaitElementAndSelect(By.id(" + "\"" + objeto.name + "\")," + "\"" + objeto.valueSelect + "\"));"+ "\n"];
     }
 }
-
+// Funcion que escribe los metodos de java de Submit y Reset
+function waitElementAndClick_Submit_Reset(objeto){
+    if(objeto.className != undefined && objeto.className != ""){
+        javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.srcType +"' and @class='"+ objeto.className +"']\"));" + "\n"];
+      
+    }else if(objeto.name != undefined && objeto.name != ""){
+        javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.srcType +"' and @name='"+ objeto.name +"']\"));" + "\n"];
+       
+    }else if(objeto.id != undefined && objeto.id != ""){
+        javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.srcType +"' and @id='"+ objeto.id +"']\"));" + "\n"];
+       
+    }else if(objeto.value != undefined && objeto.value != ""){
+        javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.srcType +"' and @value='"+ objeto.value +"']\"));" + "\n"];
+    }
+}
 function diferenciarEventos(secuencia) {
     javaFunciones= "";
     if (secuencia[0].url != "") {
@@ -200,11 +214,9 @@ function diferenciarEventos(secuencia) {
             } else if (secuencia[i].elementType == "td") {
                 javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else if (secuencia[i].srcType == "submit") {
-                if(secuencia[i].className != undefined && secuencia[i].className != ""){
-                    javaFunciones = [javaFunciones + "\twaitElementAndClick(By.cssSelector(\""+secuencia[i].elementType +"." + secuencia[i].className + "\"));" + "\n"];
-               }else{    
-                   javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
-                }    
+                waitElementAndClick_Submit_Reset(secuencia[i]);
+            } else if (secuencia[i].srcType == "reset") {
+                waitElementAndClick_Submit_Reset(secuencia[i]);
             } else {
                waitElementAndClick(secuencia[i]);
             }
@@ -222,5 +234,3 @@ function diferenciarEventos(secuencia) {
     }
     return javaFunciones;
 }
-
-
