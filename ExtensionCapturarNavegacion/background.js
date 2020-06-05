@@ -180,7 +180,7 @@ function waitElementAndSelect(objeto){
 }
 
 function diferenciarEventos(secuencia) {
-    let objeto;
+    javaFunciones = "";
     if (secuencia[0].url != "") {
         javaFunciones = [javaFunciones + "driver.get(" + "\"" + secuencia[0].url + "\"" + ");" + "\n"];
     }
@@ -206,21 +206,17 @@ function diferenciarEventos(secuencia) {
                 }
                 
             } else {
-                objeto = secuencia[i];
-                waitElementAndClick(objeto);
+                waitElementAndClick(secuencia[i]);
             }
         } else if (secuencia[i].typeEvent == "change") {
             if (secuencia[i].elementType == "select") {
-                objeto = secuencia[i];
-                waitElementAndSelect(objeto);            
+                waitElementAndSelect(secuencia[i]);            
             }else {
-                objeto = secuencia[i];
-                waitElementAndSendKeys(objeto);
+                waitElementAndSendKeys(secuencia[i]);
             }
 
         }else if (secuencia[i].typeEvent == "checkbox") {
-            objeto = secuencia[i];
-            waitElementAndClick(objeto);
+            waitElementAndClick(secuencia[i]);
         }
     }
     return javaFunciones;
