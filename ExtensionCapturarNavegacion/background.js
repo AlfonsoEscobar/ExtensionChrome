@@ -48,7 +48,7 @@ function empezando() {
 function terminando() {
     chrome.downloads.download({
         url: saveFunctionJava(),
-        filename: "Test.txt",
+        filename: "Test_unitario.txt",
         saveAs: true
     });
     secuencia = [];
@@ -132,10 +132,20 @@ function save() {
 }
 // Funcion que se utiliza para guardar la informacion en un archivo con metodos Java
 function saveFunctionJava() {
-    var htmlContent = save();
-    htmlContent = ["@Test" + "\n" 
+    var htmlContent;
+    htmlContent = [
+    "/**" + "\n"
+        + "* TESTLINK ->"+ "\n"
+        + "*" + "\n"
+        + "*    titulo="+"\n"
+        + "*    descripcion="+"\n"
+        + "*    precondiciones="+"\n"
+        + "*    idRequisitosCubiertos="+"\n"
+    + "**/" + "\n"
+    +"public class Test_unitario {" + "\n"
+    + "@Test" + "\n" 
     + "public void test" + Date.now() + "() throws Exception {"+ "\n" 
-    + htmlContent + diferenciarEventos(secuencia) + "}"];  
+    + diferenciarEventos(secuencia) + "}"+ "\n" + "}"];  
     
     var bl = new Blob(htmlContent, {
         type: "text/txt"
