@@ -91,22 +91,22 @@ function updateValue(e) {
     for (var i = 0; i < e.path.length - 2; i++) {
         path = "/" + event.path[i].nodeName + path;
     };
-
+    //Para recoger el frame en que se ha producido el evento si es que tiene
     for (var i = 0; i < e.path.length; i++) {
         if(e.path[i].name !== undefined){
              frameActual = e.path[i].name;
         }
     };
-    // frameActual = e.path[9].name;
+  
     if (e.srcElement.localName == "select") {
         valueSelect = e.srcElement.selectedOptions[0].innerText;
     };
-
+    // Para cambiarle la propiedad a type si es que marcan un text y deje de ser input
     if (e.srcElement.type == "text"){
         srcType = e.srcElement.type;   
     };
 
-// Para cambiarle la propiedad a type si es que marcan un checkbox y deje de ser input
+    // Para cambiarle la propiedad a type si es que marcan un checkbox o un radio y deje de ser input
     if (e.srcElement.type == "checkbox") {
         type = e.srcElement.type;
     };

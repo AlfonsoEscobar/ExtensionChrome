@@ -132,8 +132,7 @@ function save() {
 }
 // Funcion que se utiliza para guardar la informacion en un archivo con metodos Java
 function saveFunctionJava() {
-    var htmlContent;
-    htmlContent = [
+    var htmlContent = [
     "/**" + "\n"
         + "* TESTLINK ->"+ "\n"
         + "*" + "\n"
@@ -212,7 +211,7 @@ function diferenciarEventos(secuencia) {
             // Capturamos en un método cuando hay un cambio de frame
            if(secuencia[i].frame != frameViejo && secuencia[i].frame != ""){
                 frameViejo = secuencia[i].frame;
-                javaFunciones = [javaFunciones + "\tchangeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
+                javaFunciones = [javaFunciones +"\tchangeParentFrame();\n" +"\tchangeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
             }
             if (secuencia[i].elementType == "a") {
                 javaFunciones = [javaFunciones + "\twaitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
