@@ -15,9 +15,6 @@ function DatosEvento(id, name, elementType, typeEvent, value, linkText, innerTex
     this.frame = frame;
 }
 
-document.addEventListener("click", clickHandler);
-document.addEventListener("change", updateValue);
-
 //Es la funcion que se encarga de recoger el evento del click
 function clickHandler(event) {
     //Inicializa la variable "mandar" a falso para que solo cuando es un click valido se mande la informacion
@@ -28,20 +25,20 @@ function clickHandler(event) {
     var elementType = event.srcElement.localName;
     var path = "";
     var altImagen = "";
-    var className="";
-    var srcType="";
+    var className = "";
+    var srcType = "";
 
    // Para poder separar los input de submit y reset y se comporten como un click.
-     if (event.srcElement.type == "submit" || event.srcElement.type == "reset"){
+    if(event.srcElement.type == "submit" || event.srcElement.type == "reset"){
             srcType = event.srcElement.type;
             className = event.srcElement.className;
-        };
+    }
     //Se carga con la informacion dependiendo de donde haya dado click, y solo en los elementos que queremos
     if (elementType == 'span' ||elementType == 'img' || elementType == 'td' || elementType == 'a' || elementType == 'button' || srcType =="submit" || srcType =="reset" || srcType =="type") {
         // con esto recogemos todo el path del evento y lo guardamos en un string(lo ponemos a lenght -2 para que tome desde html)
         for (var i = 0; i < event.path.length - 2; i++) {
             path = "/" + event.path[i].nodeName + path;
-        };
+        }
         // Con este for recorremos el tr para guardar los td que puedan estar dentro.
         // for (var i = 0; i < event.path[1].cells.length; i++) {
         //    var pathCells = pathCells + "<td>" + event.path[1].cells[i].innerText + "</td>";
@@ -49,7 +46,7 @@ function clickHandler(event) {
         // Captamos alt para información de la imagen pulsada
         if (event.srcElement.localName == "img") {
             altImagen = event.srcElement.alt;
-        };
+        }
        
         // Volcamos todos los datos a nuestro objeto para enviarlo
         var miobjeto = new DatosEvento (
@@ -68,7 +65,7 @@ function clickHandler(event) {
             event.view.name
             );
         mandar = true;
-    };
+    }
     //Solo si la varible "mandar" es igual a true, es decir a dado en un elemento valido
     // se envia la informacion
     if (mandar) {
@@ -124,8 +121,15 @@ function updateValue(e) {
         null,
         srcType,
         frameActual
-    )
+    );
     console.log(e);
 
-    chrome.runtime.sendMessage(datos);
+    
+    if(typeof chrome.app.isInstalled!=='undefined'){
+        chrome.runtime.sendMessage(datos);
+    }
+
 }
+
+document.addEventListener("click", clickHandler);
+document.addEventListener("change", updateValue);

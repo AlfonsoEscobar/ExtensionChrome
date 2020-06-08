@@ -181,7 +181,7 @@ function waitElementAndSendKeys(objeto){
 // Funcion que escribe los metodos de java de los select de los change
 function waitElementAndSelect(objeto){
     if (objeto.id != undefined && objeto.id != ""){
-        javaFunciones = [javaFunciones + "\twaitElementAndSelect(By.id(" + "\"" + objeto.id + "\")," + "\"" + objeto.valueSelect + "\"));"+ "\n"];
+        javaFunciones = [javaFunciones + "\twaitElementAndSelect(By.id(" + "\"" + objeto.id + "\")," + "\"" + objeto.valueSelect + "\");"+ "\n"];
     }else{
         javaFunciones = [javaFunciones + "\twaitElementAndSelect(By.id(" + "\"" + objeto.name + "\")," + "\"" + objeto.valueSelect + "\"));"+ "\n"];
     }
@@ -199,6 +199,8 @@ function waitElementAndClick_Submit_Reset(objeto){
        
     }else if(objeto.value != undefined && objeto.value != ""){
         javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.srcType +"' and @value='"+ objeto.value +"']\"));" + "\n"];
+    }else{
+        javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + objeto.path + "\"));" + "\n"];
     }
 }
 function diferenciarEventos(secuencia) {
@@ -212,7 +214,9 @@ function diferenciarEventos(secuencia) {
             // Capturamos en un método cuando hay un cambio de frame
            if(secuencia[i].frame != frameViejo && secuencia[i].frame != ""){
                 frameViejo = secuencia[i].frame;
-                javaFunciones = [javaFunciones + "\tchangeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
+                javaFunciones = [javaFunciones +"\tchangeParentFrame();\n" +"\tchangeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
+            }else{
+                frameViejo = "";
             }
             if (secuencia[i].elementType == "a") {
                 javaFunciones = [javaFunciones + "\twaitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
@@ -220,7 +224,7 @@ function diferenciarEventos(secuencia) {
                 // } else if (secuencia[i].elementType == "td") {
                 //     javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[" + secuencia[i].innerText + "]\"));" + "\n"];
             } else if (secuencia[i].elementType == "img") {
-                javaFunciones = [javaFunciones + "\twaitElementAndClick(By.cssSelector(\"img[alt=\\"+"\"" + secuencia[i].altImg + "\\\"]), By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
+                javaFunciones = [javaFunciones + "\twaitElementAndClick(By.cssSelector(\"img[alt=\\"+"\"" + secuencia[i].altImg + "\\\"]\"), By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
             } else if (secuencia[i].elementType == "td") {
                 javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else if (secuencia[i].srcType == "submit") {
