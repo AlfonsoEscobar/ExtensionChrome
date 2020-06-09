@@ -224,7 +224,11 @@ function diferenciarEventos(secuencia) {
                 // } else if (secuencia[i].elementType == "td") {
                 //     javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[" + secuencia[i].innerText + "]\"));" + "\n"];
             } else if (secuencia[i].elementType == "img") {
-                javaFunciones = [javaFunciones + "\twaitElementAndClick(By.cssSelector(\"img[alt=\\"+"\"" + secuencia[i].altImg + "\\\"]\"), By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
+                if(secuencia[i].id != "" && secuencia[i].id != undefined){
+                    javaFunciones = [javaFunciones + "\twaitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
+                }else{
+                    javaFunciones = [javaFunciones + "\twaitElementAndClick(By.cssSelector(\"img[alt=\\"+"\"" + secuencia[i].altImg + "\\\"]\"), By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
+                }
             } else if (secuencia[i].elementType == "td") {
                 javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else if (secuencia[i].srcType == "submit") {
