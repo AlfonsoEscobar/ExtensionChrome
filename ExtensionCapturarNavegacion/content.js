@@ -124,10 +124,7 @@ function updateValue(e) {
     );
     console.log(e);
 
-    
-    if(typeof chrome.app.isInstalled!=='undefined'){
-        chrome.runtime.sendMessage(datos);
-    }
+    chrome.runtime.sendMessage(datos);
 
 }
 
