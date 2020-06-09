@@ -180,9 +180,9 @@ function waitElementAndSendKeys(objeto){
 // Funcion que escribe los metodos de java de los select de los change
 function waitElementAndSelect(objeto){
     if (objeto.id != undefined && objeto.id != ""){
-        javaFunciones = [javaFunciones + "\twaitElementAndSelect(By.id(" + "\"" + objeto.id + "\")," + "\"" + objeto.valueSelect + "\"));"+ "\n"];
+        javaFunciones = [javaFunciones + "\twaitElementAndSelect(By.id(" + "\"" + objeto.id + "\")," + "\"" + objeto.valueSelect + "\");"+ "\n"];
     }else{
-        javaFunciones = [javaFunciones + "\twaitElementAndSelect(By.id(" + "\"" + objeto.name + "\")," + "\"" + objeto.valueSelect + "\"));"+ "\n"];
+        javaFunciones = [javaFunciones + "\twaitElementAndSelect(By.id(" + "\"" + objeto.name + "\")," + "\"" + objeto.valueSelect + "\");"+ "\n"];
     }
 }
 // Funcion que escribe los metodos de java de Submit y Reset
@@ -209,9 +209,11 @@ function diferenciarEventos(secuencia) {
         // Diferenciamos los eventos si es un click
         if (secuencia[i].typeEvent == "click") {
             // Capturamos en un método cuando hay un cambio de frame
-           if(secuencia[i].frame != frameViejo && secuencia[i].frame != ""){
+            if(secuencia[i].frame != frameViejo && secuencia[i].frame != ""){
                 frameViejo = secuencia[i].frame;
                 javaFunciones = [javaFunciones +"\tchangeParentFrame();\n" +"\tchangeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
+            }else{
+                frameViejo = "";
             }
             if (secuencia[i].elementType == "a") {
                 javaFunciones = [javaFunciones + "\twaitElementAndClick(By.linkText(" + "\"" + secuencia[i].linkText + "\"));" + "\n"];
@@ -219,10 +221,10 @@ function diferenciarEventos(secuencia) {
                 // } else if (secuencia[i].elementType == "td") {
                 //     javaFunciones = [javaFunciones + "waitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[" + secuencia[i].innerText + "]\"));" + "\n"];
             } else if (secuencia[i].elementType == "img") {
-                if(objeto.id != undefined && objeto.id != ""){
-                    javaFunciones = [javaFunciones + "\twaitElementAndClick(By.id(" + "\"" + objeto.id + "\"));" + "\n"];
+                if(secuencia[i].id != "" && secuencia[i].id != undefined){
+                    javaFunciones = [javaFunciones + "\twaitElementAndClick(By.id(" + "\"" + secuencia[i].id + "\"));" + "\n"];
                 }else{
-                 javaFunciones = [javaFunciones + "\twaitElementAndClick(By.cssSelector(\"img[alt=\\"+"\"" + secuencia[i].altImg + "\\\"]), By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
+                    javaFunciones = [javaFunciones + "\twaitElementAndClick(By.cssSelector(\"img[alt=\\"+"\"" + secuencia[i].altImg + "\\\"]\"), By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
                 }
             } else if (secuencia[i].elementType == "td") {
                 javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
@@ -245,5 +247,6 @@ function diferenciarEventos(secuencia) {
             javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
         }
     }
+    
     return javaFunciones;
 }
