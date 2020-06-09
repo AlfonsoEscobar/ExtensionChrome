@@ -1,8 +1,8 @@
-// Icono de activado
+//Icono de activado
 var iconAct = "img/activate.png";
-// Icono desactivado
+//Icono desactivado
 var iconDes = "img/desactivate.png";
-// Array donde se guardaran los eventos que vayan grabando
+//Array donde se guardaran los eventos que vayan grabando
 var secuencia = [];
 // Inicializacion del objeto que se va guardando
 var mensaje = {};
@@ -15,7 +15,7 @@ var debug = true;
 var frameViejo;
 // Variable para guardar el string de los metodos java
 var javaFunciones;
-// Se pone en funcionamiento o se apaga solo cuando se le da click al icono
+//Se pone en funcionamiento o se apaga solo cuando se le da click al icono
 chrome.browserAction.onClicked.addListener(function() {
     if (pulsado) {
         empezando();
@@ -25,7 +25,7 @@ chrome.browserAction.onClicked.addListener(function() {
         pulsado = !pulsado;
     }
 });
-// Funcion que se llama cuando se pulsa por primera vez el icono para comenzar a grabar
+
 function empezando() {
     log(">>>>>>>>>> En funcionamiento <<<<<<<<<<");
     crearNotificacion("on", "Empezando a grabar", iconAct, "Empezando a grabar", 3000);
@@ -36,7 +36,7 @@ function empezando() {
         mensaje = {
             url: tabs[0].url
         }
-        log(mensaje);
+        console.log(mensaje);
         secuencia.push(mensaje);
         log("Nº de secuencia >>>>>> " + secuencia.length);
     });
@@ -62,8 +62,7 @@ function terminando() {
 // Es la funcion que se le llama para recibir el mensaje y se vuelve a llamar cuando se termina para 
 // el "removeListener"
 const oyente = function listener(request, sender, sendResponse) {
-   
-    // Recogemos todas los atributos del objeto que nos ha llegado desde el content
+
     mensaje = {
         id: request.id,
         name: request.name,
@@ -79,8 +78,8 @@ const oyente = function listener(request, sender, sendResponse) {
         srcType:request.srcType,
         frame:request.frame
     }
-    log(mensaje);
-    // Guardamos los objetos segun van llegando en un array
+    console.log(mensaje);
+    //Guardamos los objetos segun van llegando
     secuencia.push(mensaje);
     log("Nº de secuencia >>>>>> " + secuencia.length);
 }
@@ -107,6 +106,7 @@ function log(mensaje) {
     }
 }
 // Funcion que se utiliza para guardar la informacion en un archivo
+// Funcion que se utiliza para guardar la informacion en un archivo
 function save() {
     var htmlContent = "";
     for (i in secuencia) {
@@ -132,7 +132,8 @@ function save() {
 }
 // Funcion que se utiliza para guardar la informacion en un archivo con metodos Java
 function saveFunctionJava() {
-    var htmlContent = [
+    var htmlContent;
+    htmlContent = [
     "/**" + "\n"
         + "* TESTLINK ->"+ "\n"
         + "*" + "\n"
@@ -182,7 +183,7 @@ function waitElementAndSelect(objeto){
     if (objeto.id != undefined && objeto.id != ""){
         javaFunciones = [javaFunciones + "\twaitElementAndSelect(By.id(" + "\"" + objeto.id + "\")," + "\"" + objeto.valueSelect + "\");"+ "\n"];
     }else{
-        javaFunciones = [javaFunciones + "\twaitElementAndSelect(By.id(" + "\"" + objeto.name + "\")," + "\"" + objeto.valueSelect + "\");"+ "\n"];
+        javaFunciones = [javaFunciones + "\twaitElementAndSelect(By.id(" + "\"" + objeto.name + "\")," + "\"" + objeto.valueSelect + "\"));"+ "\n"];
     }
 }
 // Funcion que escribe los metodos de java de Submit y Reset
@@ -198,6 +199,8 @@ function waitElementAndClick_Submit_Reset(objeto){
        
     }else if(objeto.value != undefined && objeto.value != ""){
         javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.srcType +"' and @value='"+ objeto.value +"']\"));" + "\n"];
+    }else{
+        javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + objeto.path + "\"));" + "\n"];
     }
 }
 function diferenciarEventos(secuencia) {
@@ -209,7 +212,7 @@ function diferenciarEventos(secuencia) {
         // Diferenciamos los eventos si es un click
         if (secuencia[i].typeEvent == "click") {
             // Capturamos en un método cuando hay un cambio de frame
-            if(secuencia[i].frame != frameViejo && secuencia[i].frame != ""){
+           if(secuencia[i].frame != frameViejo && secuencia[i].frame != ""){
                 frameViejo = secuencia[i].frame;
                 javaFunciones = [javaFunciones +"\tchangeParentFrame();\n" +"\tchangeFrame(" + "\"" + secuencia[i].frame + "\");" + "\n"];
             }else{
@@ -247,6 +250,5 @@ function diferenciarEventos(secuencia) {
             javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
         }
     }
-    
     return javaFunciones;
 }
