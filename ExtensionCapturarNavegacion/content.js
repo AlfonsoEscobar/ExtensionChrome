@@ -86,6 +86,7 @@ function updateValue(e) {
     var valueSelect = "";
     var type = e.type;
     var srcType = null;
+    var className="";
     var frameActual;
     
     for (var i = 0; i < e.path.length - 2; i++) {
@@ -109,6 +110,7 @@ function updateValue(e) {
     // Para cambiarle la propiedad a type si es que marcan un checkbox o un radio y deje de ser input
     if (e.srcElement.type == "checkbox") {
         type = e.srcElement.type;
+        className = e.srcElement.className;
     };
     if (e.srcElement.type == "radio") {
         type = e.srcElement.type;
@@ -125,7 +127,7 @@ function updateValue(e) {
         path.toLowerCase(), 
         valueSelect,
         null,
-        null,
+        className,
         srcType,
         frameActual
         );

@@ -206,6 +206,22 @@ function waitElementAndClick_Submit_Reset(objeto){
         javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + objeto.path + "\"));" + "\n"];
     }
 }
+
+function waitElementAndClick_checkBox(objeto){
+    if(objeto.className != undefined && objeto.className != ""){
+        if(objeto.id != undefined && objeto.id != ""){
+            javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.typeEvent +"' and @class='"+ objeto.className  +"' and @id='"+ objeto.id +"']\"));" + "\n"];
+        }else{
+            javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.typeEvent +"' and @class='"+ objeto.className +"']\"));" + "\n"];  
+        }    
+    }else if(objeto.id != undefined && objeto.id != ""){
+        javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.typeEvent +"' and @id='"+ objeto.id +"']\"));" + "\n"];  
+    }else if(objeto.value != undefined && objeto.value != ""){
+        javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.typeEvent +"' and @value='"+ objeto.value +"']\"));" + "\n"];
+    }else{
+        javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + objeto.path + "\"));" + "\n"];
+    }
+}
 function diferenciarEventos(secuencia) {
     javaFunciones= "";
     if (secuencia[0].url != "") {
@@ -250,7 +266,7 @@ function diferenciarEventos(secuencia) {
                waitElementAndSendKeys(secuencia[i]);
             }
         }else if (secuencia[i].typeEvent == "checkbox") {
-          waitElementAndClick(secuencia[i]);
+            waitElementAndClick(secuencia[i]);
         }else if (secuencia[i].typeEvent == "radio") {
             javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
         }
