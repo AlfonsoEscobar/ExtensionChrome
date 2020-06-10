@@ -189,8 +189,11 @@ function waitElementAndSelect(objeto){
 // Funcion que escribe los metodos de java de Submit y Reset
 function waitElementAndClick_Submit_Reset(objeto){
     if(objeto.className != undefined && objeto.className != ""){
-        javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.srcType +"' and @class='"+ objeto.className +"']\"));" + "\n"];
-      
+        if(objeto.name != undefined && objeto.name != ""){
+            javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.srcType +"' and @class='"+ objeto.className  +"' and @name='"+ objeto.name +"']\"));" + "\n"];
+        }else{
+            javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.srcType +"' and @class='"+ objeto.className +"']\"));" + "\n"];  
+        }    
     }else if(objeto.name != undefined && objeto.name != ""){
         javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.srcType +"' and @name='"+ objeto.name +"']\"));" + "\n"];
        
@@ -230,6 +233,8 @@ function diferenciarEventos(secuencia) {
                     javaFunciones = [javaFunciones + "\twaitElementAndClick(By.cssSelector(\"img[alt=\\"+"\"" + secuencia[i].altImg + "\\\"]\"), By.xpath(" + "\"" + secuencia[i].path + "\"));" + "\n"];
                 }
             } else if (secuencia[i].elementType == "td") {
+                javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
+            } else if (secuencia[i].elementType == "span") {
                 javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else if (secuencia[i].srcType == "submit") {
                 waitElementAndClick_Submit_Reset(secuencia[i]);
