@@ -207,7 +207,7 @@ function waitElementAndClick_Submit_Reset(objeto){
     }
 }
 
-function waitElementAndClick_checkBox(objeto){
+function waitElementAndClick_button(objeto){
     if(objeto.className != undefined && objeto.className != ""){
         if(objeto.id != undefined && objeto.id != ""){
             javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(\"//input[@type='"+ objeto.typeEvent +"' and @class='"+ objeto.className  +"' and @id='"+ objeto.id +"']\"));" + "\n"];
@@ -253,7 +253,11 @@ function diferenciarEventos(secuencia) {
             } else if (secuencia[i].elementType == "span") {
                 javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
             } else if (secuencia[i].srcType == "submit") {
+                if (secuencia[i].elementType == "button"){
+                    javaFunciones = [javaFunciones + "\twaitElementAndClick(By.xpath(" + "\"" + secuencia[i].path + "[contains(text(),'" + secuencia[i].linkText + "')]\"));" + "\n"];
+                }else{
                 waitElementAndClick_Submit_Reset(secuencia[i]);
+                }
             } else if (secuencia[i].srcType == "reset") {
                 waitElementAndClick_Submit_Reset(secuencia[i]);
             } else {
