@@ -101,6 +101,7 @@ function updateValue(e) {
 // Para cambiarle la propiedad a type si es que marcan un checkbox y deje de ser input
     if (e.srcElement.type == "checkbox") {
         type = e.srcElement.type;
+        className = e.srcElement.className;
     }
 
     if (e.srcElement.type == "radio") {
